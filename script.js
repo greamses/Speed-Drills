@@ -62,7 +62,7 @@ loginForm.addEventListener('submit', (e) => {
     feedback.className = 'correct visible';
     
     setTimeout(() => {
-      window.location.href = './topics/geometry.html';
+      window.location.href = './subjects.html';
     }, 1500);
   } else {
     feedback.textContent = '✗ Invalid username or password. Please try again.';
