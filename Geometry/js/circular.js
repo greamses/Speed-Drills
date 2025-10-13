@@ -183,7 +183,8 @@ function drawShapeWithSVG(question) {
   const containerHeight = shapeContainer.clientHeight;
   const centerX = containerWidth / 2;
   const centerY = containerHeight / 2;
-  const scale = 5;
+  // Fixed visual radius for consistent display
+  const visualRadius = Math.min(containerWidth, containerHeight) * 0.35;
   
   const svgNS = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNS, "svg");
@@ -194,7 +195,7 @@ function drawShapeWithSVG(question) {
   
   switch (question.shape) {
     case 'circle': {
-      const radius = question.r * scale;
+      const radius = visualRadius;
       
       const circle = document.createElementNS(svgNS, "circle");
       circle.setAttribute("cx", centerX);
@@ -263,7 +264,7 @@ function drawShapeWithSVG(question) {
     }
     
     case 'sector': {
-      const radius = question.r * scale;
+      const radius = visualRadius;
       const startAngle = -90; // Start at top
       const endAngle = startAngle + question.angle;
       
@@ -365,6 +366,7 @@ function drawShapeWithSVG(question) {
   
   shapeElement.appendChild(svg);
 }
+
   
   function addDimensionLine(svg, x1, y1, x2, y2, text, position) {
     const svgNS = "http://www.w3.org/2000/svg";
@@ -449,4 +451,7 @@ function drawShapeWithSVG(question) {
   
   newQuestion(shapes[0].id);
 });
+
+
+
 
