@@ -1,0 +1,189 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px;
+  line-height: 1.4;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  color: white;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+#mathResources {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin: 0;
+}
+
+#mathResources li {
+  background: white;
+  border-radius: 5px;
+  border: 2px solid #E8E8E8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+#mathResources li:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+#mathResources a {
+  display: block;
+  padding: 5px 24px;
+  text-decoration: none;
+  color: #2d3748;
+  font-weight: 600;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  position: relative;
+  background: #f8f9fa;
+  border-left: 5px solid transparent;
+}
+
+#mathResources li:nth-child(odd) a {
+  border-left-color: #6927E5;
+  /* background: #B48CFF; */
+}
+
+#mathResources li:nth-child(even) a {
+  border-left-color: #0471E8;
+  /* background: #8CC3FF; */
+}
+
+#mathResources li:nth-child(3n) a {
+  border-left-color: #D98B00;
+  /* background: #FFD893; */
+}
+
+#mathResources li:nth-child(4n) a {
+  border-left-color: #E60093;
+  /* background: #FF93D8; */
+}
+
+#mathResources li:nth-child(5n) a {
+  border-left-color: #00D0C5;
+  /* background: #ADFFFB; */
+}
+
+#mathResources a:hover {
+  color: #1a202c;
+  transform: translateX(8px);
+}
+
+#mathResources a:hover::before {
+  transform: translateY(-50%) rotate(360deg) scale(1.2);
+}
+
+#mathResources a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: #6b7280;
+  transition: width 0.3s ease;
+}
+
+#mathResources li:hover a::after {
+  width: 100%;
+}
+
+/* Glassmorphism effect */
+#mathResources li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 16px;
+}
+
+#mathResources li:hover::before {
+  opacity: 1;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+#mathResources li:nth-child(odd) {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+#mathResources li:nth-child(even) {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+#mathResources li:nth-child(3n) {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    padding: 20px 10px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  #mathResources {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  #mathResources a {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #mathResources li {
+    animation: none;
+  }
+}

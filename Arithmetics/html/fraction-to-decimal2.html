@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fractions to Decimals</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="../../style.css" type="text/css" media="all" />
+</head>
+
+<body>
+    <div id="game-container">
+        <h1>Fractions to Decimals 2</h1>
+        
+        <div class="custom-select">
+            <button class="select-button" aria-haspopup="listbox" aria-expanded="false">
+                <span class="selected-value">Recurring Decimals</span>
+                <span class="arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </span>
+            </button>
+            
+            <ul class="select-dropdown" role="listbox" tabindex="-1">
+                <li role="option" data-value="1" class="select-option">Recurring Decimals </li>
+                <li role="option" data-value="2" class="select-option">Power Decimals </li>
+                <li role="option" data-value="3" class="select-option">Circle Decimals</li>
+                <li role="option" data-value="4" class="select-option">Proper Fractions</li>
+                <li role="option" data-value="5" class="select-option">Mixed Fractions</li>
+                <li role="option" data-value="6" class="select-option">Improper Fractions</li>
+            </ul>
+            
+            <select id="level" name="level" class="visually-hidden">
+                <option value="1">Level 1: Recurring (15 sec)</option>
+                <option value="2">Level 2: Power (12 sec)</option>
+                <option value="3">Level 3: Circle (20 sec)</option>
+                <option value="4">Level 4: Proper (10 sec)</option>
+                <option value="5">Level 5: Mixed (15 sec)</option>
+                <option value="6">Level 6: Improper (12 sec)</option>
+            </select>
+        </div>
+        
+        <div id="stats">
+            <span id="score">Score: 0</span>
+            <span id="streak">Streak: 0</span>
+        </div>
+        <div id="equation-timer"></div>
+        <div id="equation" class="math-container">
+            <div id="math-display"></div>
+        </div>
+        <input type="number" id="answer" placeholder="Decimal answer" step="0.000001" disabled>
+        <div id="feedback"></div>
+        <div class="button-group">
+            <button id="start-btn">Start Game</button>
+            <button id="check-btn" disabled>Check Answer</button>
+        </div>
+    </div>
+    
+    <div class="chart-container" id="chartContainer">
+        <div class="chart-header">
+            <h2 class="chart-title">Your Performance</h2>
+            <div class="chart-stats">
+                <div class="chart-stat">Score: <span id="currentScoreDisplay">0</span></div>
+                <div class="chart-stat">High Score: <span id="highScoreDisplay">0</span></div>
+                <div class="chart-stat">Average Time: <span id="avgTimeDisplay">0</span>s</div>
+            </div>
+            <div class="chart-level-toggle">
+                <button class="level-toggle-btn active" data-level="all">All</button>
+                <button class="level-toggle-btn" data-level="1">L1</button>
+                <button class="level-toggle-btn" data-level="2">L2</button>
+                <button class="level-toggle-btn" data-level="3">L3</button>
+                <button class="level-toggle-btn" data-level="4">L4</button>
+                <button class="level-toggle-btn" data-level="5">L5</button>
+                <button class="level-toggle-btn" data-level="6">L6</button>
+            </div>
+        </div>
+        <canvas id="scoreChart"></canvas>
+        <div class="chart-controls">
+            <button class="chart-btn" id="printChartBtn">Print Chart</button>
+            <button class="chart-btn" id="newGameBtn">New Game</button>
+        </div>
+    </div>
+    
+    <div class="high-score-display">
+        <svg viewBox="0 0 24 24">
+            <path d="M19,5H17V3H7V5H5A2,2 0 0,0 3,7V8A5,5 0 0,0 8,13H9V19H7V21H17V19H15V13H16A5,5 0 0,0 21,8V7A2,2 0 0,0 19,5Z" />
+        </svg>
+        High Score: <span class="high-score-value" id="highScoreValue">0</span>
+    </div>
+    <script src="../js/fraction-to-decimal-2.js" type="module"></script>
+</body>
+
+</html>

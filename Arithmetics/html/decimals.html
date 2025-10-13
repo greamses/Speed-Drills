@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Decimal Point Explorer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Landing Screen -->
+    <div id="landing-screen" class="screen">
+      <h1>Decimal Point Explorer</h1>
+      <p>Master decimal multiplication and division through interactive experience!</p>
+      <!-- Custom Dropdown -->
+      <div class="custom-dropdown dropdown" id="difficulty-dropdown">
+        <div class="dropdown-selected" id="dropdown-selected">
+          <span><i class="fas fa-smile"></i> Easy</span>
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </div>
+        <div class="dropdown-options">
+          <div class="dropdown-option" data-value="easy">
+            <i class="fas fa-smile"></i> Easy
+          </div>
+          <div class="dropdown-option" data-value="medium">
+            <i class="fas fa-meh"></i> Medium
+          </div>
+          <div class="dropdown-option" data-value="hard">
+            <i class="fas fa-frown"></i> Hard
+          </div>
+        </div>
+      </div>
+      <button id="learn-btn"><i class="fas fa-graduation-cap"></i> Tutorial</button>
+      <button id="practice-btn"><i class="fas fa-dumbbell"></i> Practice</button>
+    </div>
+    
+    <!-- Tutorial Screen -->
+    <div id="tutorial-screen" class="screen hidden">
+      <h2>Understanding Decimal Movement</h2>
+      
+      <div class="tutorial-step active" id="tutorial-step-1">
+        <div class="animation-box">
+          <p id="tutorial-text">When we multiply a decimal by 10, the decimal point moves <span class="formula-highlight">one place to the right</span>.</p>
+          <div id="tutorial-animation">
+            <div class="visualization">
+              <div class="number-block">
+                <span>3</span>
+                <span class="place-value">Ones</span>
+              </div>
+              <span class="decimal-point">.</span>
+              <div class="number-block">
+                <span>5</span>
+                <span class="place-value">Tenths</span>
+              </div>
+            </div>
+          </div>
+          <p class="formula">3.5 × 10 = 35.0</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-2">
+        <div class="animation-box">
+          <p id="tutorial-text-2">When we multiply by 100, the decimal point moves <span class="formula-highlight">two places to the right</span>.</p>
+          <div id="tutorial-animation-2">
+            <div class="visualization">
+              <div class="number-block">
+                <span>3</span>
+                <span class="place-value">Ones</span>
+              </div>
+              <span class="decimal-point">.</span>
+              <div class="number-block">
+                <span>5</span>
+                <span class="place-value">Tenths</span>
+              </div>
+            </div>
+          </div>
+          <p class="formula">3.5 × 100 = 350.0</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-3">
+        <div class="animation-box">
+          <p id="tutorial-text-3">When we divide by 10, the decimal point moves <span class="formula-highlight">one place to the left</span>.</p>
+          <div id="tutorial-animation-3">
+            <div class="visualization">
+              <div class="number-block">
+                <span>3</span>
+                <span class="place-value">Ones</span>
+              </div>
+              <span class="decimal-point">.</span>
+              <div class="number-block">
+                <span>5</span>
+                <span class="place-value">Tenths</span>
+              </div>
+            </div>
+          </div>
+          <p class="formula">3.5 ÷ 10 = 0.35</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-4">
+        <div class="animation-box">
+          <p id="tutorial-text-4">Remember the pattern:</p>
+          <ul class="pattern-list">
+            <li><i class="fas fa-arrow-right"></i> × 10: 1 place right</li>
+            <li><i class="fas fa-arrow-right"></i> × 100: 2 places right</li>
+            <li><i class="fas fa-arrow-right"></i> × 1000: 3 places right</li>
+            <li><i class="fas fa-arrow-left"></i> ÷ 10: 1 place left</li>
+            <li><i class="fas fa-arrow-left"></i> ÷ 100: 2 places left</li>
+            <li><i class="fas fa-arrow-left"></i> ÷ 1000: 3 places left</li>
+          </ul>
+          <p>Now let's practice moving the decimal point!</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-navigation">
+        <button id="prev-tutorial" class="hidden"><i class="fas fa-chevron-left"></i></button>
+        <button id="next-tutorial"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      
+      <button id="tutorial-to-practice"><i class="fas fa-play"></i> Start Practice</button>
+      <div class="top">
+        <button id="tutorial-to-menu"><i class="fas fa-home"></i> </button>
+        <button id="new-problem"><i class="fas fa-sync-alt"></i> </button>
+      </div>
+      
+    </div>
+    
+    <!-- Practice Screen -->
+    <div id="practice-screen" class="screen hidden">
+      <h2>Decimal Practice</h2>
+      
+      <div class="streak-counter">
+        <button id="back-to-menu"><i class="fas fa-home"></i> Menu</button>
+        <i class="fas fa-fire"></i> <span id="streak">0</span> | <i class="fas fa-check"></i> <span id="correct-count">0</span>/<span id="total-count">0</span>
+        <span class="level-indicator"><i class="fas fa-level-up-alt"></i> <span id="current-level">1</span></span>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+      </div>
+      
+      <div class="problem-box">
+        <p id="problem-text"><span id="practice-number">4.2</span> <span id="operation-symbol">×</span> <span id="practice-multiplier">100</span></p>
+        
+        <div class="number-display" id="number-container">
+          <span id="editable-number">4.2</span>
+        </div>
+        
+        <div class="number-controls">
+          <button id="move-left"><i class="fas fa-arrow-left"></i></button>
+          <button id="move-right"><i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div class="number-controls">
+          <button id="add-zero-left">0<i class="fas fa-plus"></i> </button>
+          <button id="add-zero-right"><i class="fas fa-plus"></i>0</button>
+          <button id="remove-zeros"><i class="fas fa-times"></i> </button>
+        </div>
+        <div class="lower">
+          <button id="check-answer"><i class="fas fa-check-circle"></i>Check</button>
+          <button id="hint-button" class="hint-button"><i class="fas fa-lightbulb"></i></button>
+        </div>
+        
+        <div id="feedback" class="feedback"></div>
+      </div>
+      
+      
+      
+    </div>
+  </div>
+  
+  <script src="../js/general.js"></script>
+  
+</body>
+
+</html>

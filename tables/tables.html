@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Practice - Calculate Perimeter & Area</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="userProfile">
+            <span id="avatarDisplay">👤</span>
+            <span id="userDisplay">Guest</span>
+            <span id="triesDisplay">Tries: 0</span>
+        </div>
+        <div class="circle">
+            
+        </div>
+        <div class="game-controls">
+            <div class="timer-container">
+                <span>Time Left:</span>
+                <div id="timer">2:00</div>
+            </div>
+            <div id="completionTime" class="completion-time"></div>
+            <div class="btn-restart">
+                <button id="restartButton" class="restart-btn">Restart</button>
+            </div>
+            
+        </div>
+        <div class="header">
+            <h1>Geometry Practice</h1>
+        </div>
+        
+        <div class="main-content">
+            <div class="shape-selector">
+                <label for="shape-select">Choose a shape to practice:</label>
+                <div class="custom-select">
+                    <div class="select-button" id="selectButton">
+                        <span id="selectedShape">Rectangle</span>
+                        <span class="select-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="select-dropdown" id="selectDropdown">
+                        <div class="select-option selected" data-value="rectangle">Rectangle</div>
+                        <div class="select-option" data-value="square">Square</div>
+                        <div class="select-option" data-value="triangle">Triangle</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container show" id="tableContainer">
+                <table class="shape-table" id="shapeTable">
+                    
+                </table>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                Excellent! All calculations are correct!
+            </div>
+        </div>
+        
+        <div id="profileModal" class="modal">
+            <div class="modal-content">
+                <h2>Welcome to Geometry Practice!</h2>
+                <p>Please enter your name to get started:</p>
+                <input type="text" id="userNameInput" placeholder="Your name">
+                <button id="saveProfileBtn">Save</button>
+            </div>
+        </div>
+        
+        <div id="avatarModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Choose Your Avatar</h2>
+                <div class="avatar-grid" id="avatarGrid">
+                    <!-- Avatars will be populated by JavaScript -->
+                </div>
+                <button id="confirmAvatar" class="btn btn-primary">Confirm Avatar</button>
+            </div>
+        </div>
+        
+        <div id="resultsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>Your Results</h2>
+                
+                <div id="chartContainer">
+                    <div id="resultsView" class="chart-view active">
+                        
+                    </div>
+                    <div id="comparisonView" class="chart-view">
+                    </div>
+                </div>
+                <div class="high-scores">
+                    <h3>High Scores</h3>
+                    <ul id="highScoresList"></ul>
+                </div>
+            </div>
+            
+        </div>
+        <div class="lower-btns">
+            <button id="showChartButton" class="show-chart-btn">Show Results</button>
+            <button id="printButton" class="show-chart-btn">Print Results</button>
+            <button id="switchPlayerButton" class="btn btn-secondary">
+                <i class="fas fa-user-friends"></i> Switch Player
+            </button>
+        </div>
+        
+    </div>
+    
+    <script src="tables.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Metric Unit Explorer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Landing Screen -->
+    <div id="landing-screen" class="screen">
+      <h1>Metric Unit Explorer</h1>
+      <p>Master metric unit conversions through interactive experience!</p>
+      <!-- Custom Dropdown -->
+      <div class="custom-dropdown dropdown" id="difficulty-dropdown">
+        <div class="dropdown-selected" id="dropdown-selected">
+          <span><i class="fas fa-smile"></i> Easy</span>
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </div>
+        <div class="dropdown-options">
+          <div class="dropdown-option" data-value="easy">
+            <i class="fas fa-smile"></i> Easy
+          </div>
+          <div class="dropdown-option" data-value="medium">
+            <i class="fas fa-meh"></i> Medium
+          </div>
+          <div class="dropdown-option" data-value="hard">
+            <i class="fas fa-frown"></i> Hard
+          </div>
+        </div>
+      </div>
+      <button id="learn-btn"><i class="fas fa-graduation-cap"></i> Tutorial</button>
+      <button id="practice-btn"><i class="fas fa-dumbbell"></i> Practice</button>
+    </div>
+    
+    <!-- Tutorial Screen -->
+    <div id="tutorial-screen" class="screen hidden">
+      <h2>Understanding Metric Conversions</h2>
+      
+      <div class="tutorial-step active" id="tutorial-step-1">
+        <div class="animation-box">
+          <p id="tutorial-text">Metric units follow a decimal system based on powers of 10.</p>
+          <div class="metric-prefix-chart">
+            <div class="prefix-row">
+              <div class="prefix-box">kilo (k)</div>
+              <div class="prefix-box">hecto (h)</div>
+              <div class="prefix-box">deka (dk)</div>
+              <div class="prefix-box highlight">unit (m, l, g)</div>
+              <div class="prefix-box">deci (d)</div>
+              <div class="prefix-box">centi (c)</div>
+              <div class="prefix-box">milli (m)</div>
+            </div>
+            <div class="value-row">
+              <div class="value-box">×1000</div>
+              <div class="value-box">×100</div>
+              <div class="value-box">×10</div>
+              <div class="value-box highlight">1</div>
+              <div class="value-box">÷10</div>
+              <div class="value-box">÷100</div>
+              <div class="value-box">÷1000</div>
+            </div>
+          </div>
+          <p class="formula">1 km = 1000 m</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-2">
+        <div class="animation-box">
+          <p id="tutorial-text-2">To convert between units, move the decimal point:</p>
+          <div class="visualization">
+            <div class="conversion-example">
+              <div class="unit-tags">
+                <span class="unit-tag">km</span>
+                <span class="unit-tag">hm</span>
+                <span class="unit-tag">dkm</span>
+                <span class="unit-tag highlight">m</span>
+                <span class="unit-tag">dm</span>
+                <span class="unit-tag">cm</span>
+                <span class="unit-tag">mm</span>
+              </div>
+              <div class="number-line">
+                <span>2</span>
+                <span class="decimal-point">.</span>
+                <span>5</span>
+                <span class="unit-label">km</span>
+                <i class="fas fa-arrow-right"></i>
+                <span>2</span>
+                <span>5</span>
+                <span>0</span>
+                <span>0</span>
+                <span class="decimal-point">.</span>
+                <span class="unit-label">m</span>
+              </div>
+            </div>
+          </div>
+          <p class="formula">2.5 km = 2500.0 m (3 places right)</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-3">
+        <div class="animation-box">
+          <p id="tutorial-text-3">Converting to smaller units moves the decimal right (multiply):</p>
+          <div class="visualization">
+            <div class="conversion-example">
+              <div class="unit-tags">
+                <span class="unit-tag">kg</span>
+                <span class="unit-tag">hg</span>
+                <span class="unit-tag">dkg</span>
+                <span class="unit-tag highlight">g</span>
+                <span class="unit-tag">dg</span>
+                <span class="unit-tag">cg</span>
+                <span class="unit-tag">mg</span>
+              </div>
+              <div class="number-line">
+                <span>0</span>
+                <span>.</span>
+                <span>3</span>
+                <span>5</span>
+                <span class="unit-label">g</span>
+                <i class="fas fa-arrow-right"></i>
+                <span>3</span>
+                <span>5</span>
+                <span>0</span>
+                <span class="unit-label">mg</span>
+              </div>
+            </div>
+          </div>
+          <p class="formula">0.35 g = 350 mg (3 places right)</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-4">
+        <div class="animation-box">
+          <p id="tutorial-text-4">Converting to larger units moves the decimal left (divide):</p>
+          <div class="visualization">
+            <div class="conversion-example">
+              <div class="unit-tags">
+                <span class="unit-tag">kL</span>
+                <span class="unit-tag">hL</span>
+                <span class="unit-tag">dkL</span>
+                <span class="unit-tag highlight">L</span>
+                <span class="unit-tag">dL</span>
+                <span class="unit-tag">cL</span>
+                <span class="unit-tag">mL</span>
+              </div>
+              <div class="number-line">
+                <span>4</span>
+                <span>5</span>
+                <span>0</span>
+                <span>0</span>
+                <span class="unit-label">mL</span>
+                <i class="fas fa-arrow-left"></i>
+                <span>4</span>
+                <span>.</span>
+                <span>5</span>
+                <span class="unit-label">L</span>
+              </div>
+            </div>
+          </div>
+          <p class="formula">4500 mL = 4.5 L (3 places left)</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-step" id="tutorial-step-5">
+        <div class="animation-box">
+          <p id="tutorial-text-4">Remember the pattern:</p>
+          <ul class="pattern-list">
+            <li><i class="fas fa-arrow-right"></i> To smaller units: move right</li>
+            <li><i class="fas fa-arrow-left"></i> To larger units: move left</li>
+            <li>Count the steps between units</li>
+            <li>Move decimal that many places</li>
+          </ul>
+          <p>Now let's practice converting metric units!</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-navigation">
+        <button id="prev-tutorial" class="hidden"><i class="fas fa-chevron-left"></i></button>
+        <button id="next-tutorial"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      
+      <button id="tutorial-to-practice"><i class="fas fa-play"></i> Start Practice</button>
+      <div class="top">
+        <button id="tutorial-to-menu"><i class="fas fa-home"></i> </button>
+        <button id="new-problem"><i class="fas fa-sync-alt"></i> </button>
+      </div>
+    </div>
+    
+    <!-- Practice Screen -->
+     <div id="practice-screen" class="screen hidden">
+    <h2>Metric Conversion Practice</h2>
+    
+    <div class="streak-counter">
+      <button id="back-to-menu"><i class="fas fa-home"></i> Menu</button>
+      <i class="fas fa-fire"></i> <span id="streak">0</span> | <i class="fas fa-check"></i> <span id="correct-count">0</span>/<span id="total-count">0</span>
+      <span class="level-indicator"><i class="fas fa-level-up-alt"></i> <span id="current-level">1</span></span>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+    </div>
+    
+    <div class="problem-box">
+      <div class="unit-tags-container" id="unit-tags-container">
+        <div class="conversion-arrow"></div>
+      </div>
+      
+      <p id="problem-text">
+        Convert <span id="practice-number">1</span>
+        <span id="from-unit" class="unit-label">m</span>
+        to <span id="to-unit" class="unit-label">cm</span>
+      </p>
+      
+      <div class="number-display" id="number-container">
+        <span id="editable-number">1</span>
+      </div>
+      
+      <div class="number-controls">
+        <button id="move-left"><i class="fas fa-arrow-left"></i></button>
+        <button id="move-right"><i class="fas fa-arrow-right"></i></button>
+      </div>
+      
+      <div class="number-controls">
+        <button id="add-zero-left">0<i class="fas fa-plus"></i> </button>
+        <button id="add-zero-right"><i class="fas fa-plus"></i>0</button>
+        <button id="remove-zeros"><i class="fas fa-times"></i> </button>
+      </div>
+      <div class="lower">
+        <button id="check-answer"><i class="fas fa-check-circle"></i>Check</button>
+        <button id="hint-button" class="hint-button"><i class="fas fa-lightbulb"></i></button>
+      </div>
+      
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </div>
+  </div>
+  
+  <script src="../js/metric-unit.js"></script>
+</body>
+</html>
