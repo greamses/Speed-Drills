@@ -1,26 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-:root {
-    --primary-color: #4361ee;
-    --secondary-color: #3f37c9;
-    --accent-color: #4895ef;
-    --success-color: #4cc9f0;
-    --error-color: #f72585;
-    --warning-color: #f8961e;
-    --light-color: #f8f9fa;
-    --dark-color: #212529;
-    --text-color: #2b2d42;
-    --text-light: #8d99ae;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    --border-radius-full: 9999px;
-    --border-radius-xl: 20px;
-    --border-radius-lg: 16px;
-    --border-radius-md: 12px;
-    --border-radius-sm: 8px;
-}
+@import url('./theme.css');
 
 * {
     box-sizing: border-box;

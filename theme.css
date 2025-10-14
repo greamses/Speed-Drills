@@ -27,4 +27,35 @@
   --transition-slow: 0.5s;
   --cubic-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --cubic-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+  
+  --primary: #4361ee;
+  --secondary: #7209b7;
+  --success: #06d6a0;
+  --danger: #ef476f;
+  --warning: #ffd166;
+  --light: #f8f9fa;
+  --dark: #212529;
+  --border-radius: 16px;
+  --font-primary: 'Baloo 2', system-ui, sans-serif;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  --primary-color: #4361ee;
+  --secondary-color: #3f37c9;
+  --accent-color: #4895ef;
+  --success-color: #4cc9f0;
+  --error-color: #f72585;
+  --warning-color: #f8961e;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --text-color: #2b2d42;
+  --text-light: #8d99ae;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --border-radius-full: 9999px;
+  --border-radius-xl: 20px;
+  --border-radius-lg: 16px;
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
 }
