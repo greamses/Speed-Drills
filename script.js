@@ -17,7 +17,7 @@ const validCredentials = [
   { username: 'fikision', password: 'mth4330' },
   { username: 'jotraction', password: 'mth5329' },
   { username: 'mmegebra', password: 'mth8123' },
-  { username: 'william.anderson', password: 'Will#852' },
+  { username: 'vikasion', password: 'mth8909' },
   { username: 'mia_thomas', password: 'Mia$963' },
   { username: 'alexander_jackson', password: 'Alex!159' }
 ];
