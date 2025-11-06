@@ -1,4 +1,4 @@
-import listConverter from './js/list.js'
+import listConverter from '../js/list.js'
 
 const resources = [
   { name: "Linear Equations", url: "./html/linear.html" },
