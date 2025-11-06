@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roman Numeral Tile Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            color: #2C3E50;
+        }
+        
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 4px solid #FFD700;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .game-title {
+            font-size: 2.5rem;
+            color: #8B4513;
+            margin-bottom: 10px;
+            font-weight: bold;
+            
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #FF6B6B;
+            border-radius: 15px;
+            color: white;
+            border: 3px solid #DC143C;
+        }
+        
+        .target-number {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .score-div {
+            position: absolute;
+            top: 18%;
+            left: 12%;
+            background: white;
+            color: #8B4513;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        .tiles-section {
+            margin-bottom: 30px;
+        }
+        
+        .tiles-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #8B4513;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .tiles-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .tile {
+            background-color: #98FB98;
+            border: 3px solid #32CD32;
+            border-radius: 12px;
+            padding: 16px 22px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #006400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            user-select: none;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            background-color: #90EE90;
+        }
+        
+        .tile:active {
+            transform: translateY(-2px);
+            background-color: #7CFC00;
+        }
+        
+        .double-tile {
+            background-color: #FFB6C1;
+            border: 3px solid #FF69B4;
+            color: #8B008B;
+        }
+        
+        .double-tile:hover {
+            background-color: #FFA0B4;
+        }
+        
+        .double-tile:active {
+            background-color: #FF91A4;
+        }
+        
+        .tooltip {
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2C3E50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid #34495E;
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #2C3E50;
+        }
+        
+        .tile:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .rack-section {
+            margin-bottom: 30px;
+        }
+        
+        .rack {
+            min-height: 100px;
+            background-color: #FFEBCD;
+            border: 4px dashed #DEB887;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .rack.drag-over {
+            background-color: #E0FFFF;
+            border-color: #40E0D0;
+            border-style: solid;
+        }
+        
+        .rack-placeholder {
+            color: #8B7355;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+        
+        .rack-tile {
+            background-color: #FFEAA7;
+            border: 3px solid #FDCB6E;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #8B4513;
+            cursor: move;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            user-select: none;
+        }
+        
+        .rack-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            background-color: #FDCB6E;
+        }
+        
+        .rack-tile .remove-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #FF4757;
+            color: white;
+            border: 2px solid #FF3742;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-btn:hover {
+            background-color: #FF3742;
+            transform: scale(1.1);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background-color: #4ECDC4;
+            color: white;
+            border: 3px solid #26D0CE;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: inherit;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            background-color: #26D0CE;
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background-color: #55A3FF;
+            border-color: #2F80ED;
+        }
+        
+        .btn-success:hover {
+            background-color: #2F80ED;
+        }
+        
+        .btn-danger {
+            background-color: #FF6B6B;
+            border-color: #FF5252;
+        }
+        
+        .btn-danger:hover {
+            background-color: #FF5252;
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feedback.correct {
+            color: #27AE60;
+            animation: bounce 0.6s ease;
+        }
+        
+        .feedback.incorrect {
+            color: #E74C3C;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes bounce {
+            
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+            
+            40% {
+                transform: translateY(-12px);
+            }
+            
+            60% {
+                transform: translateY(-6px);
+            }
+        }
+        
+        @keyframes shake {
+            
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            
+            25% {
+                transform: translateX(-8px);
+            }
+            
+            75% {
+                transform: translateX(8px);
+            }
+        }
+        
+        .drag-preview {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.8;
+            transform: rotate(5deg) scale(1.1);
+        }
+        
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .game-container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 15px;
+            }
+            
+            .target-number {
+                font-size: 2.5rem;
+            }
+            
+            .score {
+                font-size: 1.3rem;
+            }
+            
+            .tiles-container {
+                gap: 8px;
+            }
+            
+            .tile {
+                padding: 14px 18px;
+                font-size: 1.2rem;
+                min-width: 55px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .rack {
+                min-height: 80px;
+                padding: 15px;
+                touch-action: manipulation;
+            }
+            
+            .rack-tile {
+                padding: 10px 14px;
+                font-size: 1.1rem;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                padding: 16px 24px;
+                font-size: 1.1rem;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .tiles-title {
+                font-size: 1.2rem;
+                margin-bottom: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-title {
+                font-size: 1.7rem;
+            }
+            
+            .target-number {
+                font-size: 2.2rem;
+            }
+            
+            .tile {
+                padding: 12px 16px;
+                font-size: 1.1rem;
+                min-width: 50px;
+            }
+            
+            .rack-tile {
+                padding: 8px 12px;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Touch interaction improvements */
+        .tile,
+        .rack-tile,
+        .btn {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Better touch targets */
+        @media (pointer: coarse) {
+            .tile {
+                min-height: 50px;
+                min-width: 50px;
+            }
+            
+            .btn {
+                min-height: 48px;
+            }
+            
+            .remove-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+                top: -12px;
+                right: -12px;
+            }
+        }
+        
+        /* Dragging states */
+        .tile.dragging,
+        .rack-tile.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+        
+        .rack.drag-active {
+            border-color: #32CD32;
+            background-color: #F0FFF0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1 class="game-title">Roman Numeral</h1>
+        </div>
+        
+        <div class="game-info">
+            <div>
+                <div>Convert this number:</div>
+                <div class="target-number" id="targetNumber">23</div>
+            </div>
+            <div class='score-div'>
+                <div>Score:</div>
+                <div class="score" id="score">0</div>
+            </div>
+        </div>
+        
+        <div class="tiles-section">
+            <div class="tiles-container" id="singleTiles">
+                <!-- Single tiles will be generated here -->
+            </div>
+        </div>
+        
+        <div class="tiles-section">
+            <div class="tiles-container" id="doubleTiles">
+                <!-- Double tiles will be generated here -->
+            </div>
+        </div>
+        
+        <div class="rack-section">
+            
+            <div class="rack" id="rack">
+                <div class="rack-placeholder">Drag tiles here</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-success" id="checkBtn">Check Answer</button>
+            <button class="btn btn-danger" id="clearBtn">Clear Rack</button>
+            <button class="btn" id="newNumberBtn">New Number</button>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+    </div>
+    
+    <script>
+        class RomanNumeralGame {
+            constructor() {
+                this.targetNumber = 23;
+                this.score = 0;
+                this.rack = [];
+                this.draggedElement = null;
+                this.dragPreview = null;
+                this.isDragging = false;
+                
+                this.singleTiles = [
+                    { letter: 'I', value: 1 },
+                    { letter: 'V', value: 5 },
+                    { letter: 'X', value: 10 },
+                    { letter: 'L', value: 50 },
+                    { letter: 'C', value: 100 },
+                    { letter: 'D', value: 500 },
+                    { letter: 'M', value: 1000 }
+                ];
+                
+                this.doubleTiles = [
+                    { letter: 'IV', value: 4 },
+                    { letter: 'IX', value: 9 },
+                    { letter: 'XL', value: 40 },
+                    { letter: 'XC', value: 90 },
+                    { letter: 'CD', value: 400 },
+                    { letter: 'CM', value: 900 }
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.generateTiles();
+                this.setupEventListeners();
+                this.generateNewNumber();
+                this.updateDisplay();
+            }
+            
+            generateTiles() {
+                const singleTilesContainer = document.getElementById('singleTiles');
+                const doubleTilesContainer = document.getElementById('doubleTiles');
+                
+                singleTilesContainer.innerHTML = '';
+                doubleTilesContainer.innerHTML = '';
+                
+                this.singleTiles.forEach(tile => {
+                    const tileElement = this.createTileElement(tile, false);
+                    singleTilesContainer.appendChild(tileElement);
+                });
+                
+                this.doubleTiles.forEach(tile => {
+                    const tileElement = this.createTileElement(tile, true);
+                    doubleTilesContainer.appendChild(tileElement);
+                });
+            }
+            
+            createTileElement(tile, isDouble) {
+                const tileElement = document.createElement('button');
+                tileElement.className = isDouble ? 'tile double-tile' : 'tile';
+                tileElement.textContent = tile.letter;
+                tileElement.draggable = true;
+                tileElement.dataset.letter = tile.letter;
+                tileElement.dataset.value = tile.value;
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = `Value: ${tile.value}`;
+                tileElement.appendChild(tooltip);
+                
+                return tileElement;
+            }
+            
+            setupEventListeners() {
+                this.setupTouchEvents();
+                this.setupDesktopDragEvents();
+                
+                document.getElementById('checkBtn').addEventListener('click', () => this.checkAnswer());
+                document.getElementById('clearBtn').addEventListener('click', () => this.clearRack());
+                document.getElementById('newNumberBtn').addEventListener('click', () => this.generateNewNumber());
+                
+                // Tap to add tiles (backup method)
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('tile') && !this.isDragging) {
+                        const tile = {
+                            letter: e.target.dataset.letter,
+                            value: parseInt(e.target.dataset.value),
+                            id: Date.now() + Math.random()
+                        };
+                        this.addToRack(tile);
+                        this.updateRackDisplay();
+                        
+                        e.target.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            e.target.style.transform = '';
+                        }, 150);
+                    }
+                });
+            }
+            
+            setupTouchEvents() {
+                let touchStartElement = null;
+                let touchStartPos = { x: 0, y: 0 };
+                let hasMovedEnough = false;
+                let touchMoveThreshold = 15;
+                
+                document.addEventListener('touchstart', (e) => {
+                    const target = e.target;
+                    if (target.classList.contains('tile') || target.classList.contains('rack-tile')) {
+                        touchStartElement = target;
+                        const touch = e.touches[0];
+                        touchStartPos = { x: touch.clientX, y: touch.clientY };
+                        hasMovedEnough = false;
+                        this.isDragging = false;
+                        
+                        target.classList.add('dragging');
+                        target.style.zIndex = '1001';
+                    }
+                }, { passive: true });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (touchStartElement) {
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const deltaX = Math.abs(touch.clientX - touchStartPos.x);
+                        const deltaY = Math.abs(touch.clientY - touchStartPos.y);
+                        
+                        if (deltaX > touchMoveThreshold || deltaY > touchMoveThreshold) {
+                            hasMovedEnough = true;
+                            this.isDragging = true;
+                            
+                            touchStartElement.style.position = 'fixed';
+                            touchStartElement.style.left = (touch.clientX - 40) + 'px';
+                            touchStartElement.style.top = (touch.clientY - 30) + 'px';
+                            touchStartElement.style.pointerEvents = 'none';
+                            touchStartElement.style.transform = 'scale(1.1) rotate(5deg)';
+                            
+                            const rack = document.getElementById('rack');
+                            const rackRect = rack.getBoundingClientRect();
+                            if (touch.clientX >= rackRect.left && touch.clientX <= rackRect.right &&
+                                touch.clientY >= rackRect.top && touch.clientY <= rackRect.bottom) {
+                                rack.classList.add('drag-over');
+                            } else {
+                                rack.classList.remove('drag-over');
+                            }
+                        }
+                    }
+                }, { passive: false });
+                
+                document.addEventListener('touchend', (e) => {
+                    if (touchStartElement) {
+                        const rack = document.getElementById('rack');
+                        
+                        if (hasMovedEnough && this.isDragging) {
+                            const touch = e.changedTouches[0];
+                            const rackRect = rack.getBoundingClientRect();
+                            
+                            if (touch.clientX >= rackRect.left && touch.clientX <= rackRect.right &&
+                                touch.clientY >= rackRect.top && touch.clientY <= rackRect.bottom) {
+                                
+                                if (touchStartElement.classList.contains('tile')) {
+                                    const tile = {
+                                        letter: touchStartElement.dataset.letter,
+                                        value: parseInt(touchStartElement.dataset.value),
+                                        id: Date.now() + Math.random()
+                                    };
+                                    this.addToRack(tile);
+                                    this.updateRackDisplay();
+                                } else if (touchStartElement.classList.contains('rack-tile')) {
+                                    const fromIndex = parseInt(touchStartElement.dataset.index);
+                                    this.moveRackTile(fromIndex, this.rack.length - 1);
+                                    this.updateRackDisplay();
+                                }
+                            }
+                        }
+                        
+                        // Reset element
+                        touchStartElement.classList.remove('dragging');
+                        touchStartElement.style.position = '';
+                        touchStartElement.style.left = '';
+                        touchStartElement.style.top = '';
+                        touchStartElement.style.pointerEvents = '';
+                        touchStartElement.style.zIndex = '';
+                        touchStartElement.style.transform = '';
+                        
+                        rack.classList.remove('drag-over');
+                        
+                        // Reset drag state after a short delay
+                        setTimeout(() => {
+                            this.isDragging = false;
+                        }, 100);
+                        
+                        touchStartElement = null;
+                        hasMovedEnough = false;
+                    }
+                }, { passive: true });
+            }
+            
+            setupDesktopDragEvents() {
+                document.addEventListener('dragstart', (e) => {
+                    if (e.target.classList.contains('tile')) {
+                        this.draggedElement = {
+                            letter: e.target.dataset.letter,
+                            value: parseInt(e.target.dataset.value),
+                            id: Date.now() + Math.random()
+                        };
+                        this.createDragPreview(e.target);
+                        e.target.classList.add('dragging');
+                    } else if (e.target.classList.contains('rack-tile')) {
+                        this.draggedElement = {
+                            letter: e.target.dataset.letter,
+                            value: parseInt(e.target.dataset.value),
+                            id: e.target.dataset.id,
+                            fromRack: true,
+                            fromIndex: parseInt(e.target.dataset.index)
+                        };
+                        e.target.classList.add('dragging');
+                    }
+                });
+                
+                document.addEventListener('dragend', (e) => {
+                    this.removeDragPreview();
+                    if (e.target.classList.contains('tile') || e.target.classList.contains('rack-tile')) {
+                        e.target.classList.remove('dragging');
+                    }
+                    this.draggedElement = null;
+                });
+                
+                document.addEventListener('dragover', (e) => {
+                    if (this.dragPreview) {
+                        this.dragPreview.style.left = e.clientX + 10 + 'px';
+                        this.dragPreview.style.top = e.clientY - 30 + 'px';
+                    }
+                });
+                
+                const rack = document.getElementById('rack');
+                rack.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    rack.classList.add('drag-over');
+                });
+                
+                rack.addEventListener('dragleave', (e) => {
+                    if (!rack.contains(e.relatedTarget)) {
+                        rack.classList.remove('drag-over');
+                    }
+                });
+                
+                rack.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    rack.classList.remove('drag-over');
+                    
+                    if (this.draggedElement) {
+                        if (this.draggedElement.fromRack) {
+                            this.moveRackTile(this.draggedElement.fromIndex, this.rack.length - 1);
+                        } else {
+                            this.addToRack(this.draggedElement);
+                        }
+                        this.updateRackDisplay();
+                    }
+                });
+            }
+            
+            createDragPreview(element) {
+                this.dragPreview = element.cloneNode(true);
+                this.dragPreview.classList.add('drag-preview');
+                document.body.appendChild(this.dragPreview);
+            }
+            
+            removeDragPreview() {
+                if (this.dragPreview) {
+                    document.body.removeChild(this.dragPreview);
+                    this.dragPreview = null;
+                }
+            }
+            
+            addToRack(tile) {
+                this.rack.push(tile);
+            }
+            
+            moveRackTile(fromIndex, toIndex) {
+                if (fromIndex >= 0 && fromIndex < this.rack.length) {
+                    const tile = this.rack.splice(fromIndex, 1)[0];
+                    this.rack.splice(toIndex, 0, tile);
+                }
+            }
+            
+            removeFromRack(index) {
+                this.rack.splice(index, 1);
+                this.updateRackDisplay();
+            }
+            
+            clearRack() {
+                this.rack = [];
+                this.updateRackDisplay();
+                this.showFeedback('');
+            }
+            
+            updateRackDisplay() {
+                const rackElement = document.getElementById('rack');
+                rackElement.innerHTML = '';
+                
+                if (this.rack.length === 0) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'rack-placeholder';
+                    placeholder.textContent = 'Drag tiles here';
+                    rackElement.appendChild(placeholder);
+                    return;
+                }
+                
+                this.rack.forEach((tile, index) => {
+                    const tileElement = document.createElement('div');
+                    tileElement.className = 'rack-tile';
+                    tileElement.textContent = tile.letter;
+                    tileElement.draggable = true;
+                    tileElement.dataset.letter = tile.letter;
+                    tileElement.dataset.value = tile.value;
+                    tileElement.dataset.id = tile.id;
+                    tileElement.dataset.index = index;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.textContent = '×';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.removeFromRack(index);
+                    });
+                    
+                    tileElement.appendChild(removeBtn);
+                    rackElement.appendChild(tileElement);
+                });
+            }
+            
+            generateNewNumber() {
+                this.targetNumber = Math.floor(Math.random() * 3999) + 1;
+                this.clearRack();
+                this.updateDisplay();
+            }
+            
+            updateDisplay() {
+                document.getElementById('targetNumber').textContent = this.targetNumber;
+                document.getElementById('score').textContent = this.score;
+            }
+            
+            numberToRoman(num) {
+                const values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+                const numerals = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+                
+                let result = '';
+                for (let i = 0; i < values.length; i++) {
+                    while (num >= values[i]) {
+                        result += numerals[i];
+                        num -= values[i];
+                    }
+                }
+                return result;
+            }
+            
+            checkAnswer() {
+                const userRoman = this.rack.map(tile => tile.letter).join('');
+                const correctRoman = this.numberToRoman(this.targetNumber);
+                
+                if (userRoman === correctRoman) {
+                    this.score += 10;
+                    this.showFeedback(`Correct! ${this.targetNumber} = ${correctRoman}`, 'correct');
+                    setTimeout(() => {
+                        this.generateNewNumber();
+                    }, 2000);
+                } else if (userRoman === '') {
+                    this.showFeedback('Please add some tiles to your rack!', 'incorrect');
+                } else {
+                    this.showFeedback(`Not quite right. Try again!`, 'incorrect');
+                }
+                
+                this.updateDisplay();
+            }
+            
+            showFeedback(message, type = '') {
+                const feedbackElement = document.getElementById('feedback');
+                feedbackElement.textContent = message;
+                feedbackElement.className = `feedback ${type}`;
+                
+                if (type) {
+                    setTimeout(() => {
+                        if (type !== 'correct') {
+                            feedbackElement.className = 'feedback';
+                        }
+                    }, 3000);
+                }
+            }
+            
+            showFeedback(message, type = '') {
+                const feedbackElement = document.getElementById('feedback');
+                feedbackElement.textContent = message;
+                feedbackElement.className = `feedback ${type}`;
+                
+                if (type) {
+                    setTimeout(() => {
+                        if (type !== 'correct') {
+                            feedbackElement.className = 'feedback';
+                        }
+                    }, 3000);
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const game = new RomanNumeralGame();
+        });
+    </script>
+</body>
+
+</html>

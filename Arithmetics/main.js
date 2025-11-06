@@ -10,7 +10,8 @@ const resources = [
   { name: "Fraction to Decimal 2", url: "./html/fraction-to-decimal2.html" },
   { name: "Metric Measurement", url: "./html/metric.html" },
   { name: "Percents Sprint 1", url: "./html/percent-sprint1.html" },
-  { name: "Percents Sprint 2", url:'./html/percent-sprint2.html'}
+  { name: "Percents Sprint 2", url:'./html/percent-sprint2.html'},
+  { name: "Roman Numerals", url:'./html/roman.html'}
 ];
 
 listConverter(resources)
