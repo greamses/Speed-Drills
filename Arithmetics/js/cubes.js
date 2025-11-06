@@ -1,4 +1,4 @@
-import modules from '../../modules.js';
+import modules from '../../js/modules.js';
 
 const [
   startEquationTimer,
