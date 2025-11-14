@@ -1,4 +1,4 @@
-import modules from '../../modules.js';
+import modules from '../../js/modules.js';
 
 const [
   startEquationTimer,
@@ -382,3 +382,5 @@ document.addEventListener('DOMContentLoaded', function() {
   showLevels(elements);
   setupLevelToggleButtons(state, elements);
 });
+
+console.log('ys')
