@@ -88,6 +88,13 @@ function generateEquation() {
   const maxAttempts = 100;
   const variable = config.variables[Math.floor(Math.random() * config.variables.length)];
   
+  // Helper function to format coefficients
+  const formatCoefficient = (coeff, showOne = false) => {
+    if (coeff === 1 && !showOne) return '';
+    if (coeff === -1 && !showOne) return '-';
+    return coeff;
+  };
+  
   while (attempts < maxAttempts) {
     solution = randomInt();
     const steps = state.currentLevel;
@@ -108,8 +115,9 @@ function generateEquation() {
             break;
           case 'multiply':
             const a3 = randomInt(1);
-            equation = `${a3}${variable} = ${a3 * solution}`;
-            latex = `${a3}${variable} = ${a3 * solution}`;
+            const coeff3 = formatCoefficient(a3);
+            equation = `${coeff3 === '' ? '' : coeff3}${variable} = ${a3 * solution}`;
+            latex = `${coeff3 === '' ? '' : coeff3}${variable} = ${a3 * solution}`;
             break;
           case 'divide':
             const a4 = randomInt(1);
@@ -126,8 +134,9 @@ function generateEquation() {
           case 'add-multiply':
             const a5 = randomInt(1);
             const b5 = randomInt();
-            equation = `${a5}${variable} + ${b5} = ${a5 * solution + b5}`;
-            latex = `${a5}${variable} + ${b5} = ${a5 * solution + b5}`;
+            const coeff5 = formatCoefficient(a5);
+            equation = `${coeff5 === '' ? '' : coeff5}${variable} + ${b5} = ${a5 * solution + b5}`;
+            latex = `${coeff5 === '' ? '' : coeff5}${variable} + ${b5} = ${a5 * solution + b5}`;
             break;
           case 'subtract-divide':
             const a6 = randomInt(1);
@@ -146,8 +155,9 @@ function generateEquation() {
           case 'subtract-multiply':
             const a8 = randomInt(1);
             const b8 = randomInt();
-            equation = `${a8}(${variable} - ${b8}) = ${a8 * (solution - b8)}`;
-            latex = `${a8}(${variable} - ${b8}) = ${a8 * (solution - b8)}`;
+            const coeff8 = formatCoefficient(a8);
+            equation = `${coeff8 === '' ? '' : coeff8}(${variable} - ${b8}) = ${a8 * (solution - b8)}`;
+            latex = `${coeff8 === '' ? '' : coeff8}(${variable} - ${b8}) = ${a8 * (solution - b8)}`;
             break;
         }
         break;
@@ -159,23 +169,27 @@ function generateEquation() {
             const a9 = randomInt(1);
             const b9 = randomInt(1);
             const c9 = randomInt();
-            equation = `${a9}${variable} + ${b9}${variable} + ${c9} = ${(a9 + b9) * solution + c9}`;
-            latex = `${a9}${variable} + ${b9}${variable} + ${c9} = ${(a9 + b9) * solution + c9}`;
+            const coeff9a = formatCoefficient(a9);
+            const coeff9b = formatCoefficient(b9);
+            equation = `${coeff9a === '' ? '' : coeff9a}${variable} + ${coeff9b === '' ? '' : coeff9b}${variable} + ${c9} = ${(a9 + b9) * solution + c9}`;
+            latex = `${coeff9a === '' ? '' : coeff9a}${variable} + ${coeff9b === '' ? '' : coeff9b}${variable} + ${c9} = ${(a9 + b9) * solution + c9}`;
             break;
           case 'distribute-divide':
             const a10 = randomInt(1);
             const b10 = randomInt();
             const c10 = randomInt(1);
-            equation = `(${a10}${variable} + ${b10})/${c10} = ${(a10 * solution + b10)/c10}`;
-            latex = `\\frac{${a10}${variable} + ${b10}}{${c10}} = ${(a10 * solution + b10)/c10}`;
+            const coeff10 = formatCoefficient(a10);
+            equation = `(${coeff10 === '' ? '' : coeff10}${variable} + ${b10})/${c10} = ${(a10 * solution + b10)/c10}`;
+            latex = `\\frac{${coeff10 === '' ? '' : coeff10}${variable} + ${b10}}{${c10}} = ${(a10 * solution + b10)/c10}`;
             if (!Number.isInteger((a10 * solution + b10) / c10)) continue;
             break;
           case 'multi-operations':
             const a11 = randomInt(1);
             const b11 = randomInt();
             const c11 = randomInt(1);
-            equation = `${a11}${variable}/${c11} + ${b11} = ${a11 * solution / c11 + b11}`;
-            latex = `\\frac{${a11}${variable}}{${c11}} + ${b11} = ${a11 * solution / c11 + b11}`;
+            const coeff11 = formatCoefficient(a11);
+            equation = `${coeff11 === '' ? '' : coeff11}${variable}/${c11} + ${b11} = ${a11 * solution / c11 + b11}`;
+            latex = `\\frac{${coeff11 === '' ? '' : coeff11}${variable}}{${c11}} + ${b11} = ${a11 * solution / c11 + b11}`;
             if (!Number.isInteger(a11 * solution / c11 + b11)) continue;
             break;
         }
@@ -189,8 +203,9 @@ function generateEquation() {
             const b12 = randomInt();
             const c12 = randomInt();
             const d12 = randomInt(1);
-            equation = `${a12}(${variable} + ${b12}) + ${c12} = ${d12 * solution}`;
-            latex = `${a12}(${variable} + ${b12}) + ${c12} = ${d12 * solution}`;
+            const coeff12 = formatCoefficient(a12);
+            equation = `${coeff12 === '' ? '' : coeff12}(${variable} + ${b12}) + ${c12} = ${d12 * solution}`;
+            latex = `${coeff12 === '' ? '' : coeff12}(${variable} + ${b12}) + ${c12} = ${d12 * solution}`;
             if (a12 * (solution + b12) + c12 !== d12 * solution) continue;
             break;
           case 'multi-fractions':
@@ -206,8 +221,10 @@ function generateEquation() {
             const b14 = randomInt();
             const c14 = randomInt(1);
             const d14 = randomInt();
-            equation = `${a14}${variable} + ${b14} = ${c14}${variable} - ${d14}`;
-            latex = `${a14}${variable} + ${b14} = ${c14}${variable} - ${d14}`;
+            const coeff14a = formatCoefficient(a14);
+            const coeff14b = formatCoefficient(c14);
+            equation = `${coeff14a === '' ? '' : coeff14a}${variable} + ${b14} = ${coeff14b === '' ? '' : coeff14b}${variable} - ${d14}`;
+            latex = `${coeff14a === '' ? '' : coeff14a}${variable} + ${b14} = ${coeff14b === '' ? '' : coeff14b}${variable} - ${d14}`;
             if (a14 * solution + b14 !== c14 * solution - d14) continue;
             break;
         }
@@ -231,8 +248,11 @@ function generateEquation() {
             const c16 = randomInt();
             const d16 = randomInt();
             const e16 = randomInt();
-            equation = `${a16}${variable} + ${b16}${variable} + ${c16} = ${d16}${variable} + ${e16}`;
-            latex = `${a16}${variable} + ${b16}${variable} + ${c16} = ${d16}${variable} + ${e16}`;
+            const coeff16a = formatCoefficient(a16);
+            const coeff16b = formatCoefficient(b16);
+            const coeff16c = formatCoefficient(d16);
+            equation = `${coeff16a === '' ? '' : coeff16a}${variable} + ${coeff16b === '' ? '' : coeff16b}${variable} + ${c16} = ${coeff16c === '' ? '' : coeff16c}${variable} + ${e16}`;
+            latex = `${coeff16a === '' ? '' : coeff16a}${variable} + ${coeff16b === '' ? '' : coeff16b}${variable} + ${c16} = ${coeff16c === '' ? '' : coeff16c}${variable} + ${e16}`;
             if ((a16 + b16) * solution + c16 !== d16 * solution + e16) continue;
             break;
           case 'advanced-distribution':
@@ -241,9 +261,11 @@ function generateEquation() {
             const c17 = randomInt(1);
             const d17 = randomInt();
             const e17 = randomInt();
-            equation = `${a17}(${variable} + ${b17}) + ${c17} = ${d17}(${variable} - ${e17})`;
-            latex = `${a17}(${variable} + ${b17}) + ${c17} = ${d17}(${variable} - ${e17})`;
-            if (a17 * (solution + b17) + c17 !== d17 * (solution - e17)) continue;
+            const coeff17a = formatCoefficient(a17);
+            const coeff17b = formatCoefficient(c17);
+            equation = `${coeff17a === '' ? '' : coeff17a}(${variable} + ${b17}) + ${d17} = ${coeff17b === '' ? '' : coeff17b}(${variable} - ${e17})`;
+            latex = `${coeff17a === '' ? '' : coeff17a}(${variable} + ${b17}) + ${d17} = ${coeff17b === '' ? '' : coeff17b}(${variable} - ${e17})`;
+            if (a17 * (solution + b17) + d17 !== c17 * (solution - e17)) continue;
             break;
         }
         break;
@@ -263,6 +285,7 @@ function generateEquation() {
     attempts++;
   }
   
+  // Fallback equation
   state.currentEquation = '2x + 3 = 13';
   state.solution = 5;
   renderEquation('2x + 3 = 13');
