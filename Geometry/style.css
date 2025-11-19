@@ -461,6 +461,7 @@ svg:hover {
   
   #shapeContainer{
     height: 370px;
+    width: 270px;
   }
   
   .score-display {

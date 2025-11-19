@@ -22,11 +22,13 @@ document.addEventListener('DOMContentLoaded', function () {
   shapeContainer.appendChild(timerDisplay);
 
   const triangleTypes = [
-    { id: 'equilateral', name: 'Equilateral' },
-    { id: 'right', name: 'Right Angled' },
-    { id: 'isosceles', name: 'Isosceles' },
-    { id: 'scalene', name: 'Scalene' }
-  ];
+  { id: 'equilateral', name: 'Equilateral' },
+  { id: 'right-acute', name: 'Right-Acute' },
+  { id: 'isosceles-acute', name: 'Isosceles-Acute' },
+  { id: 'isosceles-obtuse', name: 'Isosceles-Obtuse' },
+  { id: 'scalene-acute', name: 'Scalene-Acute' },
+  { id: 'scalene-obtuse', name: 'Scalene-Obtuse' }
+];
 
   triangleTypes.forEach(type => {
     const option = document.createElement('option');
@@ -130,48 +132,74 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function generateQuestion(triangleType) {
-    let question = { type: triangleType };
-
-    switch (triangleType) {
-      case 'equilateral':
-        question.angle1 = 60;
-        question.angle2 = 60;
-        question.angle3 = 60;
-        break;
-
-      case 'right':
-        const acute1 = getRandomInt(20, 70);
-        const acute2 = 90 - acute1;
-        question.angle1 = acute1;
-        question.angle2 = 90;
-        question.angle3 = acute2;
-        break;
-
-      case 'isosceles':
-        const base = getRandomInt(30, 75);
-        const apex = 180 - 2 * base;
-        question.angle1 = apex;
-        question.angle2 = base;
-        question.angle3 = base;
-        break;
-
-      case 'scalene':
-        question.angle1 = getRandomInt(30, 80);
-        question.angle2 = getRandomInt(30, 180 - question.angle1 - 30);
-        question.angle3 = 180 - question.angle1 - question.angle2;
-        break;
-    }
-
-    const hide = getRandomInt(1, 3);
-    question.hiddenAngle = hide;
-
-    question.answer =
-      hide === 1 ? question.angle1 :
-      hide === 2 ? question.angle2 :
-      question.angle3;
-
-    return question;
+  let question = { type: triangleType };
+  
+  switch (triangleType) {
+    case 'equilateral':
+      question.angle1 = 60;
+      question.angle2 = 60;
+      question.angle3 = 60;
+      break;
+      
+    case 'right-acute':
+      const acute1 = getRandomInt(20, 70);
+      const acute2 = 90 - acute1;
+      question.angle1 = acute1;
+      question.angle2 = 90;
+      question.angle3 = acute2;
+      break;
+      
+    case 'isosceles-acute':
+      const baseA = getRandomInt(40, 70);
+      const apexA = 180 - 2 * baseA;
+      question.angle1 = apexA;
+      question.angle2 = baseA;
+      question.angle3 = baseA;
+      break;
+      
+    case 'isosceles-obtuse':
+      const baseO = getRandomInt(20, 70);
+      const apexO = 180 - 2 * baseO;
+      question.angle1 = apexO; // apex will be obtuse (>90)
+      question.angle2 = baseO;
+      question.angle3 = baseO;
+      break;
+      
+    case 'scalene-acute':
+      let a1, a2, a3;
+      do {
+        a1 = getRandomInt(30, 70);
+        a2 = getRandomInt(30, 70);
+        a3 = 180 - a1 - a2;
+      } while (a3 <= 0 || a3 >= 90); // all <90
+      question.angle1 = a1;
+      question.angle2 = a2;
+      question.angle3 = a3;
+      break;
+      
+    case 'scalene-obtuse':
+      let o1, o2, o3;
+      do {
+        o1 = getRandomInt(91, 140); // obtuse
+        o2 = getRandomInt(20, 70);
+        o3 = 180 - o1 - o2;
+      } while (o3 <= 0 || o3 >= 90); // only one obtuse, others <90
+      question.angle1 = o1;
+      question.angle2 = o2;
+      question.angle3 = o3;
+      break;
   }
+  
+  const hide = getRandomInt(1, 3);
+  question.hiddenAngle = hide;
+  
+  question.answer =
+    hide === 1 ? question.angle1 :
+    hide === 2 ? question.angle2 :
+    question.angle3;
+  
+  return question;
+}
 
   function drawTriangleWithSVG(question) {
   labelsContainer.innerHTML = '';
@@ -200,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ];
       break;
 
-    case 'right':
+    case 'right-acute': // right triangle remains as before
       vertices = [
         { x: centerX - size / 2, y: centerY - size / 2 },
         { x: centerX - size / 2, y: centerY + size / 2 },
@@ -208,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ];
       break;
 
-    case 'isosceles':
+    case 'isosceles-acute':
       vertices = [
         { x: centerX, y: centerY - size * 0.7 },
         { x: centerX - size / 2, y: centerY + size * 0.3 },
@@ -216,11 +244,27 @@ document.addEventListener('DOMContentLoaded', function () {
       ];
       break;
 
-    case 'scalene':
+    case 'isosceles-obtuse':
+      vertices = [
+        { x: centerX, y: centerY - size * 0.3 }, // lower apex
+        { x: centerX - size / 2, y: centerY + size * 0.4 },
+        { x: centerX + size / 2, y: centerY + size * 0.4 }
+      ];
+      break;
+
+    case 'scalene-acute':
       vertices = [
         { x: centerX - size * 0.3, y: centerY - size * 0.5 },
-        { x: centerX - size * 0.4, y: centerY + size * 0.4 },
-        { x: centerX + size * 0.55, y: centerY + size * 0.25 }
+        { x: centerX - size * 0.5, y: centerY + size * 0.4 },
+        { x: centerX + size * 0.5, y: centerY + size * 0.35 }
+      ];
+      break;
+
+    case 'scalene-obtuse':
+      vertices = [
+        { x: centerX - size * 0.5, y: centerY - size * 0.2 }, // obtuse apex
+        { x: centerX - size * 0.6, y: centerY + size * 0.5 },
+        { x: centerX + size * 0.6, y: centerY + size * 0.3 }
       ];
       break;
   }
@@ -238,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
   svg.appendChild(triangle);
 
   // Right angle square marker
-  if (question.type === 'right') {
+  if (question.type === 'right-acute') {
     const box = document.createElementNS(svgNS, "rect");
     box.setAttribute("x", vertices[1].x);
     box.setAttribute("y", vertices[1].y - 25);
@@ -250,18 +294,16 @@ document.addEventListener('DOMContentLoaded', function () {
     svg.appendChild(box);
   }
 
-  // Side markers (slashes cutting the lines)
+  // Side markers
   function addSlashMark(x1, y1, x2, y2, count = 1) {
     const spacing = 6;
     const angle = Math.atan2(y2 - y1, x2 - x1);
-
     for (let i = 0; i < count; i++) {
       const offset = (i - (count - 1) / 2) * spacing;
       const mx = (x1 + x2) / 2 - offset * Math.sin(angle);
       const my = (y1 + y2) / 2 + offset * Math.cos(angle);
       const lx = 8 * Math.cos(angle + Math.PI / 2);
       const ly = 8 * Math.sin(angle + Math.PI / 2);
-
       const line = document.createElementNS(svgNS, "line");
       line.setAttribute("x1", mx - lx);
       line.setAttribute("y1", my - ly);
@@ -278,77 +320,67 @@ document.addEventListener('DOMContentLoaded', function () {
     addSlashMark(vertices[1].x, vertices[1].y, vertices[2].x, vertices[2].y, 2);
     addSlashMark(vertices[2].x, vertices[2].y, vertices[0].x, vertices[0].y, 2);
   }
-
-  if (question.type === 'isosceles') {
+  if (question.type.startsWith('isosceles')) {
     addSlashMark(vertices[0].x, vertices[0].y, vertices[1].x, vertices[1].y, 1);
     addSlashMark(vertices[0].x, vertices[0].y, vertices[2].x, vertices[2].y, 1);
   }
 
-  // Angle arcs and labels
+  // Angle arcs and labels (same as before)
   function addAngleArc(v, v1, v2, hidden, angleValue, skip90 = false) {
-    if (skip90) return;
+  if (skip90) return;
 
-    const radius = 25;
-    const dx1 = v1.x - v.x, dy1 = v1.y - v.y;
-    const dx2 = v2.x - v.x, dy2 = v2.y - v.y;
-    const angle1 = Math.atan2(dy1, dx1);
-    const angle2 = Math.atan2(dy2, dx2);
+  const radius = 25;
+  const dx1 = v1.x - v.x, dy1 = v1.y - v.y;
+  const dx2 = v2.x - v.x, dy2 = v2.y - v.y;
+  const angle1 = Math.atan2(dy1, dx1);
+  const angle2 = Math.atan2(dy2, dx2);
 
-    let start = angle1;
-    let end = angle2;
-    if ((end - start + 2 * Math.PI) % (2 * Math.PI) > Math.PI) {
-      [start, end] = [end, start];
-    }
+  let start = angle1, end = angle2;
+  if ((end - start + 2 * Math.PI) % (2 * Math.PI) > Math.PI) [start, end] = [end, start];
 
-    const x1 = v.x + radius * Math.cos(start);
-    const y1 = v.y + radius * Math.sin(start);
-    const x2 = v.x + radius * Math.cos(end);
-    const y2 = v.y + radius * Math.sin(end);
+  const x1 = v.x + radius * Math.cos(start);
+  const y1 = v.y + radius * Math.sin(start);
+  const x2 = v.x + radius * Math.cos(end);
+  const y2 = v.y + radius * Math.sin(end);
 
-    const path = document.createElementNS(svgNS, "path");
-    path.setAttribute("d", `M${x1} ${y1} A${radius} ${radius} 0 0 1 ${x2} ${y2}`);
-    path.setAttribute("stroke", "#222");
-    path.setAttribute("stroke-width", "2");
-    path.setAttribute("fill", "transparent");
-    svg.appendChild(path);
+  const path = document.createElementNS(svgNS, "path");
+  path.setAttribute("d", `M${x1} ${y1} A${radius} ${radius} 0 0 1 ${x2} ${y2}`);
+  path.setAttribute("stroke", "#222");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("fill", "transparent");
+  svg.appendChild(path);
 
-    // Label known angles with degree numbers
+  // Only show either the hidden "?" OR the angle value
+  const mx = v.x + (radius + 10) * Math.cos((start + end) / 2);
+  const my = v.y + (radius + 10) * Math.sin((start + end) / 2);
+
+  const text = document.createElementNS(svgNS, "text");
+  text.setAttribute("x", mx);
+  text.setAttribute("y", my);
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("font-size", "16");
+  
+  if (hidden) {
+    text.setAttribute("fill", "#e74c3c");
+    text.textContent = "?";
+  } else {
+    // Only show known angles if they are meant to be labeled
     let showDegree = false;
-    if (question.type === 'right') showDegree = (v === vertices[0]); // one acute
-    if (question.type === 'isosceles') showDegree = (v === vertices[0]); // apex
-    if (question.type === 'scalene') showDegree = (v === vertices[0] || v === vertices[1]); // two angles
+    if (question.type === 'right-acute') showDegree = (v === vertices[0]); // one acute
+    if (question.type.startsWith('isosceles')) showDegree = (v === vertices[0]); // apex
+    if (question.type.startsWith('scalene')) showDegree = (v === vertices[0] || v === vertices[1]); // two angles
 
-    if (showDegree) {
-      const text = document.createElementNS(svgNS, "text");
-      const mx = v.x + (radius + 10) * Math.cos((start + end) / 2);
-      const my = v.y + (radius + 10) * Math.sin((start + end) / 2);
-      text.setAttribute("x", mx);
-      text.setAttribute("y", my);
-      text.setAttribute("text-anchor", "middle");
-      text.setAttribute("font-size", "16");
-      text.setAttribute("fill", "#222");
-      text.textContent = `${Math.round(angleValue)}°`;
-      svg.appendChild(text);
-    }
-
-    // Hidden angle
-    if (hidden) {
-      const text = document.createElementNS(svgNS, "text");
-      const mx = v.x + (radius + 10) * Math.cos((start + end) / 2);
-      const my = v.y + (radius + 10) * Math.sin((start + end) / 2);
-      text.setAttribute("x", mx);
-      text.setAttribute("y", my);
-      text.setAttribute("text-anchor", "middle");
-      text.setAttribute("font-size", "16");
-      text.setAttribute("fill", "#e74c3c");
-      text.textContent = "?";
-      svg.appendChild(text);
-    }
+    if (!showDegree) return; // skip drawing number
+    text.setAttribute("fill", "#222");
+    text.textContent = `${Math.round(angleValue)}°`;
   }
 
-  addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, question.type === 'right' && question.angle1 === 90);
-  addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, question.type === 'right' && question.angle2 === 90);
-  addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, question.type === 'right' && question.angle3 === 90);
+  svg.appendChild(text);
+}
+
+  addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, question.type.startsWith('right-acute') && question.angle1 === 90);
+  addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, question.type.startsWith('right-acute') && question.angle2 === 90);
+  addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, question.type.startsWith('right-acute') && question.angle3 === 90);
 
   shapeElement.appendChild(svg);
 }
