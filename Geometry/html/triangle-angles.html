@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Math: Triangle Angles</title>
+    <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+</head>
+
+<body>
+    <h1>Triangle Angles</h1>
+    
+    <div class="game-container">
+        <div class="shape-selector">
+            <select id="shapeSelector"></select>
+        </div>
+        
+        <div class="shape-display" id="shapeContainer">
+            <div class="score-display">
+                <div id="score">Score: 0</div>
+            </div>
+            <div class="shape" id="shape"></div>
+            <div id="labelsContainer"></div>
+        </div>
+        
+        <div class="question-area">
+            <div id="questionDisplay"></div>
+            <input type="text" id="userAnswer">
+        </div>
+        
+        <div class="answer-input">
+            <button id="submitBtn">Submit</button>
+        </div>
+        
+        <div class="feedback">
+            <div id="feedback"></div>
+        </div>
+    </div>
+    
+    <script src="../js/triangle-angles.js"></script>
+</body>
+
+</html>
