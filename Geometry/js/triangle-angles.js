@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     currentQuestion = generateQuestion(triangleType);
     drawTriangleWithSVG(currentQuestion);
     
-    questionDisplay.textContent = `  (?)`;
+    questionDisplay.textContent = `Find  (?)`;
     userAnswerInput.value = '';
     feedbackDisplay.textContent = '';
     feedbackDisplay.className = 'feedback';
