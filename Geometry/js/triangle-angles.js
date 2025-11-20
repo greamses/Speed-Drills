@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentQuestion = null;
   let score = 0;
   let timer;
-  let timeLeft = 45;
+  let timeLeft = 20;
   
   const timerDisplay = document.createElement('div');
   timerDisplay.id = 'timerDisplay';
-  timerDisplay.style.fontSize = '20px';
+  timerDisplay.style.fontSize = '16px';
   timerDisplay.style.fontWeight = 'bold';
   timerDisplay.style.marginTop = '10px';
   shapeContainer.appendChild(timerDisplay);
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Timer functions
   function startTimer() {
     clearInterval(timer);
-    timeLeft = 45;
+    timeLeft = 20;
     updateTimerDisplay();
     
     timer = setInterval(() => {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function updateTimerDisplay() {
     timerDisplay.textContent = `⏱ ${timeLeft}s`;
-    timerDisplay.style.color = timeLeft <= 10 ? 'red' : 'black';
+    timerDisplay.style.color = timeLeft <= 5 ? 'red' : 'black';
   }
   
   function endGame(message) {
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
       currentQuestion = generateQuestion(triangleType);
       drawTriangleWithSVG(currentQuestion);
       
-      questionDisplay.textContent = `?`;
+      questionDisplay.textContent = `Find the missing angle (?)`;
       userAnswerInput.value = '';
       feedbackDisplay.textContent = '';
       feedbackDisplay.className = 'feedback';
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     setTimeout(() => {
       newQuestion(currentQuestion.type);
-    }, 1500);
+    }, 1000);
   }
   
   function getRandomInt(min, max) {
@@ -197,7 +197,10 @@ document.addEventListener('DOMContentLoaded', function() {
         question.angle1 = apexA;
         question.angle2 = baseA;
         question.angle3 = baseA;
+        
+        // For isosceles, if apex is hidden, show one base angle
         question.hiddenAngle = getRandomInt(1, 3);
+        question.showBaseAngle = (question.hiddenAngle === 1); // Show base angle if apex is hidden
         break;
         
       case 'isosceles-obtuse':
@@ -206,7 +209,10 @@ document.addEventListener('DOMContentLoaded', function() {
         question.angle1 = apexO;
         question.angle2 = baseO;
         question.angle3 = baseO;
+        
+        // For isosceles, if apex is hidden, show one base angle
         question.hiddenAngle = getRandomInt(1, 3);
+        question.showBaseAngle = (question.hiddenAngle === 1); // Show base angle if apex is hidden
         break;
         
       case 'scalene-acute':
@@ -377,9 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       // Angle arcs and labels
-      function addAngleArc(v, v1, v2, hidden, angleValue, skip90 = false) {
-        if (skip90) hidden = false; // right angle is never hidden
-        
+      function addAngleArc(v, v1, v2, hidden, angleValue, vertexIndex, showDegreeOverride = false) {
         const dx1 = v1.x - v.x,
           dy1 = v1.y - v.y;
         const dx2 = v2.x - v.x,
@@ -431,22 +435,43 @@ document.addEventListener('DOMContentLoaded', function() {
           text.setAttribute("fill", "#e74c3c");
           text.textContent = "?";
         } else {
+          // Special logic for isosceles triangles
           let showDegree = false;
-          if (question.type === 'right-acute') showDegree = (v === vertices[0] || v === vertices[2]);
-          if (question.type.startsWith('isosceles')) showDegree = (v === vertices[0]);
-          if (question.type.startsWith('scalene')) showDegree = (v === vertices[0] || v === vertices[1]);
-          if (!showDegree) return;
           
-          text.setAttribute("fill", "#222");
-          text.textContent = `${Math.round(angleValue)}°`;
+          if (question.type.startsWith('isosceles')) {
+            // For isosceles triangles, if apex is hidden, show one base angle
+            if (question.showBaseAngle && (vertexIndex === 1 || vertexIndex === 2)) {
+              // Show only one base angle (randomly choose left or right)
+              if ((vertexIndex === 1 && Math.random() < 0.5) || (vertexIndex === 2 && Math.random() >= 0.5)) {
+                showDegree = true;
+              }
+            } else if (!question.showBaseAngle) {
+              // If apex is not hidden, show apex angle
+              showDegree = (vertexIndex === 0);
+            }
+          } else if (question.type === 'right-acute') {
+            showDegree = (vertexIndex === 0 || vertexIndex === 2);
+          } else if (question.type.startsWith('scalene')) {
+            showDegree = (vertexIndex === 0 || vertexIndex === 1);
+          }
+          
+          if (showDegreeOverride) {
+            showDegree = true;
+          }
+          
+          if (showDegree) {
+            text.setAttribute("fill", "#222");
+            text.textContent = `${Math.round(angleValue)}°`;
+          }
         }
         
         svg.appendChild(text);
       }
       
-      addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, question.type.startsWith('right-acute') && question.angle1 === 90);
-      addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, question.type.startsWith('right-acute') && question.angle2 === 90);
-      addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, question.type.startsWith('right-acute') && question.angle3 === 90);
+      // Draw angles with special handling for isosceles triangles
+      addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, 0, question.type.startsWith('isosceles') && question.showBaseAngle);
+      addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, 1, question.type.startsWith('isosceles') && question.showBaseAngle);
+      addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, 2, question.type.startsWith('isosceles') && question.showBaseAngle);
       
       shapeElement.appendChild(svg);
     } catch (error) {
