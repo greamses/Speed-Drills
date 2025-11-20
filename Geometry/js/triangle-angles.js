@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       // Angle arcs and labels
-      function addAngleArc(v, v1, v2, hidden, angleValue, vertexIndex, showDegreeOverride = false) {
+      function addAngleArc(v, v1, v2, hidden, angleValue, vertexIndex) {
         const dx1 = v1.x - v.x,
           dy1 = v1.y - v.y;
         const dx2 = v2.x - v.x,
@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let start = angle1,
           end = angle2;
-        if ((end - start + 2 * Math.PI) % (2 * Math.PI) > Math.PI)[start, end] = [end, start];
+        if ((end - start + 2 * Math.PI) % (2 * Math.PI) > Math.PI) [start, end] = [end, start];
         
         // Draw the arc
         const radius = hidden ? 15 : 25;
@@ -435,28 +435,31 @@ document.addEventListener('DOMContentLoaded', function() {
           text.setAttribute("fill", "#e74c3c");
           text.textContent = "?";
         } else {
-          // Special logic for isosceles triangles
+          // Special logic for different triangle types
           let showDegree = false;
           
           if (question.type.startsWith('isosceles')) {
-            // For isosceles triangles, if apex is hidden, show one base angle
-            if (question.showBaseAngle && (vertexIndex === 1 || vertexIndex === 2)) {
-              // Show only one base angle (randomly choose left or right)
-              if ((vertexIndex === 1 && Math.random() < 0.5) || (vertexIndex === 2 && Math.random() >= 0.5)) {
-                showDegree = true;
-              }
-            } else if (!question.showBaseAngle) {
-              // If apex is not hidden, show apex angle
+            // For isosceles triangles, if apex is hidden, show only ONE base angle
+            if (question.hiddenAngle === 1) {
+              // Apex is hidden, show only vertex 1 (left base angle)
+              showDegree = (vertexIndex === 1);
+            } else {
+              // Base angle is hidden, show apex
               showDegree = (vertexIndex === 0);
             }
           } else if (question.type === 'right-acute') {
+            // For right triangles, show the two acute angles (skip the right angle at vertex 1)
             showDegree = (vertexIndex === 0 || vertexIndex === 2);
           } else if (question.type.startsWith('scalene')) {
-            showDegree = (vertexIndex === 0 || vertexIndex === 1);
-          }
-          
-          if (showDegreeOverride) {
-            showDegree = true;
+            // For scalene, always show two angles (not the hidden one)
+            // Show angles at the two vertices that aren't hidden
+            if (question.hiddenAngle === 1) {
+              showDegree = (vertexIndex === 1 || vertexIndex === 2);
+            } else if (question.hiddenAngle === 2) {
+              showDegree = (vertexIndex === 0 || vertexIndex === 2);
+            } else {
+              showDegree = (vertexIndex === 0 || vertexIndex === 1);
+            }
           }
           
           if (showDegree) {
@@ -468,10 +471,17 @@ document.addEventListener('DOMContentLoaded', function() {
         svg.appendChild(text);
       }
       
-      // Draw angles with special handling for isosceles triangles
-      addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, 0, question.type.startsWith('isosceles') && question.showBaseAngle);
-      addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, 1, question.type.startsWith('isosceles') && question.showBaseAngle);
-      addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, 2, question.type.startsWith('isosceles') && question.showBaseAngle);
+      // Draw angles with special handling for isosceles and right triangles
+      // For right triangles, skip the arc at vertex 1 (the right angle with square marker)
+      if (question.type !== 'right-acute' || question.hiddenAngle !== 1) {
+        addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, 0);
+      }
+      if (question.type !== 'right-acute' || question.hiddenAngle !== 2) {
+        addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, 1);
+      }
+      if (question.type !== 'right-acute' || question.hiddenAngle !== 3) {
+        addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, 2);
+      }
       
       shapeElement.appendChild(svg);
     } catch (error) {
