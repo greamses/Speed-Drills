@@ -23,11 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   const triangleTypes = [
     { id: 'equilateral', name: 'Equilateral' },
-    { id: 'right-acute', name: 'Right-Acute' },
-    { id: 'isosceles-acute', name: 'Isosceles-Acute' },
-    { id: 'isosceles-obtuse', name: 'Isosceles-Obtuse' },
-    { id: 'scalene-acute', name: 'Scalene-Acute' },
-    { id: 'scalene-obtuse', name: 'Scalene-Obtuse' }
+    { id: 'right', name: 'Right' },
+    { id: 'isosceles', name: 'Isosceles' },
+    { id: 'scalene', name: 'Scalene' }
   ];
   
   // Populate shape selector
@@ -180,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
         question.hiddenAngle = getRandomInt(1, 3);
         break;
         
-      case 'right-acute':
+      case 'right':
         const acute1 = getRandomInt(20, 70);
         const acute2 = 90 - acute1;
         question.angle1 = acute1;
@@ -191,59 +189,55 @@ document.addEventListener('DOMContentLoaded', function() {
         question.hiddenAngle = getRandomInt(1, 3) === 2 ? (Math.random() < 0.5 ? 1 : 3) : getRandomInt(1, 3);
         break;
         
-      case 'isosceles-acute':
-        const baseA = getRandomInt(40, 70);
-        const apexA = 180 - 2 * baseA;
-        question.angle1 = apexA;
-        question.angle2 = baseA;
-        question.angle3 = baseA;
+      case 'isosceles':
+        // Randomly choose acute or obtuse isosceles
+        const isAcute = Math.random() < 0.5;
+        if (isAcute) {
+          const baseA = getRandomInt(40, 70);
+          const apexA = 180 - 2 * baseA;
+          question.angle1 = apexA;
+          question.angle2 = baseA;
+          question.angle3 = baseA;
+        } else {
+          const baseO = getRandomInt(20, 45);
+          const apexO = 180 - 2 * baseO;
+          question.angle1 = apexO;
+          question.angle2 = baseO;
+          question.angle3 = baseO;
+        }
         
-        // For isosceles, if apex is hidden, show one base angle
         question.hiddenAngle = getRandomInt(1, 3);
-        question.showBaseAngle = (question.hiddenAngle === 1); // Show base angle if apex is hidden
+        question.showBaseAngle = (question.hiddenAngle === 1);
         break;
         
-      case 'isosceles-obtuse':
-        const baseO = getRandomInt(20, 70);
-        const apexO = 180 - 2 * baseO;
-        question.angle1 = apexO;
-        question.angle2 = baseO;
-        question.angle3 = baseO;
-        
-        // For isosceles, if apex is hidden, show one base angle
-        question.hiddenAngle = getRandomInt(1, 3);
-        question.showBaseAngle = (question.hiddenAngle === 1); // Show base angle if apex is hidden
-        break;
-        
-      case 'scalene-acute':
+      case 'scalene':
+        // Randomly choose acute or obtuse scalene
+        const isScaleneAcute = Math.random() < 0.5;
         let a1, a2, a3;
-        do {
-          a1 = getRandomInt(30, 70);
-          a2 = getRandomInt(30, 70);
-          a3 = 180 - a1 - a2;
-        } while (a3 <= 0 || a3 >= 90);
+        
+        if (isScaleneAcute) {
+          do {
+            a1 = getRandomInt(30, 70);
+            a2 = getRandomInt(30, 70);
+            a3 = 180 - a1 - a2;
+          } while (a3 <= 0 || a3 >= 90);
+        } else {
+          do {
+            a1 = getRandomInt(91, 140); // obtuse
+            a2 = getRandomInt(20, 70);
+            a3 = 180 - a1 - a2;
+          } while (a3 <= 0 || a3 >= 90);
+        }
+        
         question.angle1 = a1;
         question.angle2 = a2;
         question.angle3 = a3;
         question.hiddenAngle = getRandomInt(1, 3);
         break;
-        
-      case 'scalene-obtuse':
-        let o1, o2, o3;
-        do {
-          o1 = getRandomInt(91, 140); // obtuse
-          o2 = getRandomInt(20, 70);
-          o3 = 180 - o1 - o2;
-        } while (o3 <= 0 || o3 >= 90);
-        question.angle1 = o1;
-        question.angle2 = o2;
-        question.angle3 = o3;
-        question.hiddenAngle = getRandomInt(1, 3);
-        break;
     }
     
     // Special rule for right triangle: hidden angle cannot be 2 (the right angle)
-    if (triangleType === 'right-acute' && question.hiddenAngle === 2) {
+    if (triangleType === 'right' && question.hiddenAngle === 2) {
       question.hiddenAngle = Math.random() < 0.5 ? 1 : 3;
     }
     
@@ -285,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
           ];
           break;
           
-        case 'right-acute':
+        case 'right':
           vertices = [
             { x: centerX - size / 2, y: centerY - size / 2 },
             { x: centerX - size / 2, y: centerY + size / 2 },
@@ -293,36 +287,40 @@ document.addEventListener('DOMContentLoaded', function() {
           ];
           break;
           
-        case 'isosceles-acute':
-          vertices = [
-            { x: centerX, y: centerY - size * 0.7 },
-            { x: centerX - size / 2, y: centerY + size * 0.3 },
-            { x: centerX + size / 2, y: centerY + size * 0.3 }
-          ];
+        case 'isosceles':
+          // Check if it's acute or obtuse based on apex angle
+          const isAcute = question.angle1 < 90;
+          if (isAcute) {
+            vertices = [
+              { x: centerX, y: centerY - size * 0.7 },
+              { x: centerX - size / 2, y: centerY + size * 0.3 },
+              { x: centerX + size / 2, y: centerY + size * 0.3 }
+            ];
+          } else {
+            vertices = [
+              { x: centerX, y: centerY - size * 0.3 }, // lower apex
+              { x: centerX - size / 2, y: centerY + size * 0.4 },
+              { x: centerX + size / 2, y: centerY + size * 0.4 }
+            ];
+          }
           break;
           
-        case 'isosceles-obtuse':
-          vertices = [
-            { x: centerX, y: centerY - size * 0.3 }, // lower apex
-            { x: centerX - size / 2, y: centerY + size * 0.4 },
-            { x: centerX + size / 2, y: centerY + size * 0.4 }
-          ];
-          break;
-          
-        case 'scalene-acute':
-          vertices = [
-            { x: centerX - size * 0.3, y: centerY - size * 0.5 },
-            { x: centerX - size * 0.5, y: centerY + size * 0.4 },
-            { x: centerX + size * 0.5, y: centerY + size * 0.35 }
-          ];
-          break;
-          
-        case 'scalene-obtuse':
-          vertices = [
-            { x: centerX - size * 0.5, y: centerY - size * 0.2 }, // obtuse apex
-            { x: centerX - size * 0.6, y: centerY + size * 0.5 },
-            { x: centerX + size * 0.6, y: centerY + size * 0.3 }
-          ];
+        case 'scalene':
+          // Check if it's acute or obtuse based on angles
+          const hasObtuse = question.angle1 > 90 || question.angle2 > 90 || question.angle3 > 90;
+          if (hasObtuse) {
+            vertices = [
+              { x: centerX - size * 0.5, y: centerY - size * 0.2 }, // obtuse apex
+              { x: centerX - size * 0.6, y: centerY + size * 0.5 },
+              { x: centerX + size * 0.6, y: centerY + size * 0.3 }
+            ];
+          } else {
+            vertices = [
+              { x: centerX - size * 0.3, y: centerY - size * 0.5 },
+              { x: centerX - size * 0.5, y: centerY + size * 0.4 },
+              { x: centerX + size * 0.5, y: centerY + size * 0.35 }
+            ];
+          }
           break;
       }
       
@@ -339,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
       svg.appendChild(triangle);
       
       // Right angle square marker
-      if (question.type === 'right-acute') {
+      if (question.type === 'right') {
         const box = document.createElementNS(svgNS, "rect");
         box.setAttribute("x", vertices[1].x);
         box.setAttribute("y", vertices[1].y - 25);
@@ -447,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
               // Base angle is hidden, show apex
               showDegree = (vertexIndex === 0);
             }
-          } else if (question.type === 'right-acute') {
+          } else if (question.type === 'right') {
             // For right triangles, show the two acute angles (skip the right angle at vertex 1)
             showDegree = (vertexIndex === 0 || vertexIndex === 2);
           } else if (question.type.startsWith('scalene')) {
@@ -473,13 +471,13 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Draw angles with special handling for isosceles and right triangles
       // For right triangles, skip the arc at vertex 1 (the right angle with square marker)
-      if (question.type !== 'right-acute' || question.hiddenAngle !== 1) {
+      if (question.type !== 'right' || question.hiddenAngle !== 1) {
         addAngleArc(vertices[0], vertices[1], vertices[2], question.hiddenAngle === 1, question.angle1, 0);
       }
-      if (question.type !== 'right-acute' || question.hiddenAngle !== 2) {
+      if (question.type !== 'right' || question.hiddenAngle !== 2) {
         addAngleArc(vertices[1], vertices[0], vertices[2], question.hiddenAngle === 2, question.angle2, 1);
       }
-      if (question.type !== 'right-acute' || question.hiddenAngle !== 3) {
+      if (question.type !== 'right' || question.hiddenAngle !== 3) {
         addAngleArc(vertices[2], vertices[0], vertices[1], question.hiddenAngle === 3, question.angle3, 2);
       }
       
