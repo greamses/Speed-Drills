@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const shapes = [
     { id: 'rectangle', name: 'Rectangle', params: ['length (l)', 'width (w)'] },
     { id: 'square', name: 'Square', params: ['side (s)', 'diagonal (d)'] },
-    { id: 'triangle', name: 'Triangle', params: ['base (b)', 'height (h)'] }
+    { id: 'triangle', name: 'Triangle', params: ['base (b)', 'height (h)'] },
+    { id: 'rightTriangle', name: 'Right Triangle', params: ['base (b)', 'height (h)', 'hypotenuse (hyp)'] }
   ];
   
   shapes.forEach(shape => {
@@ -82,12 +83,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let questionText = '';
     if (currentQuestion.calculationType === 'find_l_and_w') {
-      questionText = `l-w; A: ${currentQuestion.A}, P: ${currentQuestion.P}`;
+      questionText = `l-w; A: , P: `;
     } else if (currentQuestion.isReverse) {
       if (currentQuestion.calculationType === 'A_from_P' || currentQuestion.calculationType === 'P_from_A') {
         questionText = `${currentQuestion.calculationType === 'A_from_P' ? 'P → A, P' : 'A → P, A'}: ${currentQuestion.givenValue}`;
       } else if (currentQuestion.calculationType === 'A_from_d') {
-        questionText = `d → A: ${currentQuestion.givenValue}`;
+        questionText = `d → A: `;
       } else {
         questionText = `${currentQuestion.type === 'A' ? 'A:' : 'P:'} ${currentQuestion.givenValue}, ${currentQuestion.hiddenParam}`;
       }
@@ -164,13 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (shapeId === 'square') {
       calculationTypes.splice(calculationTypes.indexOf('find_l_and_w'), 1);
       calculationTypes.push('A_from_d');
-    } else if (shapeId === 'triangle') {
+    } else if (shapeId === 'triangle' || shapeId === 'rightTriangle') {
       calculationTypes.splice(calculationTypes.indexOf('find_l_and_w'), 1);
     }
     
-    question.calculationType = shapeId === 'triangle' ? 'normal' : calculationTypes[Math.floor(Math.random() * calculationTypes.length)];
+    question.calculationType = (shapeId === 'triangle' || shapeId === 'rightTriangle') ? 'normal' : calculationTypes[Math.floor(Math.random() * calculationTypes.length)];
     question.isReverse = question.calculationType === 'normal' ? Math.random() > 0.5 : true;
-    question.type = shapeId === 'triangle' ? 'A' : Math.random() > 0.5 ? 'A' : 'P';
+    question.type = (shapeId === 'triangle' || shapeId === 'rightTriangle') ? (Math.random() > 0.5 ? 'A' : 'P') : Math.random() > 0.5 ? 'A' : 'P';
     
     switch (shapeId) {
       case 'rectangle':
@@ -206,43 +207,38 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
         
       case 'square':
-        const triples = [
-          [3, 4, 5],
-          [5, 12, 13],
-          [7, 24, 25],
-          [8, 15, 17],
-          [9, 40, 41],
-          [12, 35, 37],
-          [20, 21, 29]
-        ];
-        const triple = triples[Math.floor(Math.random() * triples.length)];
-        question.s = triple[0];
-        question.d = triple[2];
-        
+        // For A_from_d questions, generate integer diagonal between 5-15
         if (question.calculationType === 'A_from_d') {
-          question.givenValue = question.d;
-          question.answer = question.s * question.s;
+          question.d = getRandomInt(5, 15);
+          // Area from diagonal = d²/2
+          question.answer = (question.d * question.d) / 2;
           question.hiddenParam = 's';
-        } else if (question.calculationType === 'A_from_P') {
-          question.givenValue = 4 * question.s;
-          question.answer = question.s * question.s;
-          question.hiddenParam = 's';
-        } else if (question.calculationType === 'P_from_A') {
-          question.givenValue = question.s * question.s;
-          question.answer = 4 * question.s;
-          question.hiddenParam = 's';
-        } else if (question.isReverse) {
-          if (question.type === 'A') {
-            question.answer = question.s;
-            question.givenValue = question.s * question.s;
-            question.hiddenParam = 's';
-          } else {
-            question.answer = question.s;
-            question.givenValue = 4 * question.s;
-            question.hiddenParam = 's';
-          }
         } else {
-          question.answer = question.type === 'A' ? question.s * question.s : 4 * question.s;
+          // For other square questions, use normal side length
+          question.s = getRandomInt(5, 12);
+          question.d = question.s * Math.sqrt(2);
+          
+          if (question.calculationType === 'A_from_P') {
+            question.givenValue = 4 * question.s;
+            question.answer = question.s * question.s;
+            question.hiddenParam = 's';
+          } else if (question.calculationType === 'P_from_A') {
+            question.givenValue = question.s * question.s;
+            question.answer = 4 * question.s;
+            question.hiddenParam = 's';
+          } else if (question.isReverse) {
+            if (question.type === 'A') {
+              question.answer = question.s;
+              question.givenValue = question.s * question.s;
+              question.hiddenParam = 's';
+            } else {
+              question.answer = question.s;
+              question.givenValue = 4 * question.s;
+              question.hiddenParam = 's';
+            }
+          } else {
+            question.answer = question.type === 'A' ? question.s * question.s : 4 * question.s;
+          }
         }
         break;
         
@@ -262,6 +258,82 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         } else {
           question.answer = 0.5 * question.b * question.h;
+        }
+        break;
+        
+      case 'rightTriangle':
+        // Pythagorean triples including multiples
+        const pythagoreanTriples = [
+          [3, 4, 5],
+          [6, 8, 10],
+          [5, 12, 13],
+          [7, 24, 25],
+          [8, 15, 17],
+          [9, 40, 41],
+          [12, 35, 37],
+          [20, 21, 29],
+          [11, 60, 61],
+          [13, 84, 85],
+          [16, 63, 65]
+        ];
+        
+        const selectedTriple = pythagoreanTriples[Math.floor(Math.random() * pythagoreanTriples.length)];
+        
+        // Sort to get the two legs and hypotenuse
+        const sortedTriple = [...selectedTriple].sort((a, b) => a - b);
+        const leg1 = sortedTriple[0];
+        const leg2 = sortedTriple[1];
+        const hypotenuse = sortedTriple[2]; // Always the largest
+        
+        // Randomly assign legs to base and height
+        const useFirstLeg = Math.random() > 0.5;
+        question.b = useFirstLeg ? leg1 : leg2;
+        question.h = useFirstLeg ? leg2 : leg1;
+        question.hyp = hypotenuse;
+        
+        // NEW LOGIC: Show any two sides, hide one, with hypotenuse always shown
+        const sides = ['b', 'h', 'hyp'];
+        
+        // Always include hypotenuse in shown sides
+        const shownSides = ['hyp'];
+        
+        // Randomly choose one more side to show
+        const remainingSides = sides.filter(side => side !== 'hyp');
+        const secondShownSide = remainingSides[Math.floor(Math.random() * remainingSides.length)];
+        shownSides.push(secondShownSide);
+        
+        // The hidden side is the one not in shownSides
+        question.hiddenSide = sides.find(side => !shownSides.includes(side));
+        question.shownSides = shownSides;
+        
+        if (question.type === 'A') {
+          // For area, user needs to find both legs first using Pythagorean theorem
+          if (question.hiddenSide === 'b') {
+            // If base is hidden, calculate it using hypotenuse and height
+            question.missingLeg = Math.sqrt(question.hyp * question.hyp - question.h * question.h);
+            question.answer = 0.5 * question.missingLeg * question.h;
+          } else if (question.hiddenSide === 'h') {
+            // If height is hidden, calculate it using hypotenuse and base
+            question.missingLeg = Math.sqrt(question.hyp * question.hyp - question.b * question.b);
+            question.answer = 0.5 * question.b * question.missingLeg;
+          } else {
+            // If hypotenuse is hidden (shouldn't happen with our logic, but just in case)
+            question.answer = 0.5 * question.b * question.h;
+          }
+        } else {
+          // For perimeter, user needs to find all three sides first
+          if (question.hiddenSide === 'b') {
+            // If base is hidden, calculate it using hypotenuse and height
+            question.missingLeg = Math.sqrt(question.hyp * question.hyp - question.h * question.h);
+            question.answer = question.missingLeg + question.h + question.hyp;
+          } else if (question.hiddenSide === 'h') {
+            // If height is hidden, calculate it using hypotenuse and base
+            question.missingLeg = Math.sqrt(question.hyp * question.hyp - question.b * question.b);
+            question.answer = question.b + question.missingLeg + question.hyp;
+          } else {
+            // If hypotenuse is hidden (shouldn't happen with our logic, but just in case)
+            question.answer = question.b + question.h + question.hyp;
+          }
         }
         break;
     }
@@ -358,13 +430,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       case 'square': {
-        let squareSize = question.s * scale;
+        // Use fixed size for visual representation but keep actual params unchanged
+        const fixedSquareSize = 120;
         
         const square = document.createElementNS(svgNS, "rect");
-        square.setAttribute("x", centerX - squareSize / 2);
-        square.setAttribute("y", centerY - squareSize / 2);
-        square.setAttribute("width", squareSize);
-        square.setAttribute("height", squareSize);
+        square.setAttribute("x", centerX - fixedSquareSize / 2);
+        square.setAttribute("y", centerY - fixedSquareSize / 2);
+        square.setAttribute("width", fixedSquareSize);
+        square.setAttribute("height", fixedSquareSize);
         square.setAttribute("fill", "#2196F399");
         square.setAttribute("stroke", "#333");
         square.setAttribute("stroke-width", "2");
@@ -372,17 +445,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (question.calculationType === 'A_from_d') {
           const diagonal = document.createElementNS(svgNS, "line");
-          diagonal.setAttribute("x1", centerX - squareSize / 2);
-          diagonal.setAttribute("y1", centerY - squareSize / 2);
-          diagonal.setAttribute("x2", centerX + squareSize / 2);
-          diagonal.setAttribute("y2", centerY + squareSize / 2);
+          diagonal.setAttribute("x1", centerX - fixedSquareSize / 2);
+          diagonal.setAttribute("y1", centerY - fixedSquareSize / 2);
+          diagonal.setAttribute("x2", centerX + fixedSquareSize / 2);
+          diagonal.setAttribute("y2", centerY + fixedSquareSize / 2);
           diagonal.setAttribute("stroke", "#333");
           diagonal.setAttribute("stroke-width", "2");
           diagonal.setAttribute("stroke-dasharray", "5,5");
           svg.appendChild(diagonal);
           
-          addDimensionLine(svg, centerX - squareSize / 2, centerY - squareSize / 2 - 10,
-            centerX + squareSize / 2, centerY - squareSize / 2 - 10,
+          addDimensionLine(svg, centerX - fixedSquareSize / 2, centerY - fixedSquareSize / 2 - 10,
+            centerX + fixedSquareSize / 2, centerY - fixedSquareSize / 2 - 10,
             '?', 'top');
           
           const diagText = document.createElementNS(svgNS, "text");
@@ -391,15 +464,15 @@ document.addEventListener('DOMContentLoaded', function() {
           diagText.setAttribute("text-anchor", "middle");
           diagText.setAttribute("font-size", "18");
           diagText.setAttribute("fill", "#333");
-          diagText.textContent = `d = ${question.d.toFixed(2)}`;
+          diagText.textContent = `d = ${question.d}`;
           svg.appendChild(diagText);
         } else if (question.calculationType === 'A_from_P' || question.calculationType === 'P_from_A' || question.isReverse) {
-          addDimensionLine(svg, centerX - squareSize / 2, centerY - squareSize / 2 - 10,
-            centerX + squareSize / 2, centerY - squareSize / 2 - 10,
+          addDimensionLine(svg, centerX - fixedSquareSize / 2, centerY - fixedSquareSize / 2 - 10,
+            centerX + fixedSquareSize / 2, centerY - fixedSquareSize / 2 - 10,
             '?', 'top');
         } else {
-          addDimensionLine(svg, centerX - squareSize / 2, centerY - squareSize / 2 - 10,
-            centerX + squareSize / 2, centerY - squareSize / 2 - 10,
+          addDimensionLine(svg, centerX - fixedSquareSize / 2, centerY - fixedSquareSize / 2 - 10,
+            centerX + fixedSquareSize / 2, centerY - fixedSquareSize / 2 - 10,
             `${question.s}`, 'top');
         }
         break;
@@ -459,6 +532,80 @@ document.addEventListener('DOMContentLoaded', function() {
           addDimensionLine(svg, centerX - triWidth / 2 - 10, centerY + triHeight / 2,
             centerX - triWidth / 2 - 10, centerY - triHeight / 2,
             `${question.h}`, 'left');
+        }
+        break;
+      }
+      
+      case 'rightTriangle': {
+        // Use fixed sizes for visual representation but keep actual params unchanged
+        const fixedBase = 140;
+        const fixedHeight = 100;
+        
+        const triangle = document.createElementNS(svgNS, "path");
+        const x1 = centerX - fixedBase / 2;
+        const y1 = centerY + fixedHeight / 2;
+        const x2 = centerX + fixedBase / 2;
+        const y2 = centerY + fixedHeight / 2;
+        const x3 = centerX - fixedBase / 2;
+        const y3 = centerY - fixedHeight / 2;
+        
+        triangle.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2} L ${x3} ${y3} Z`);
+        triangle.setAttribute("fill", "#FF980099");
+        triangle.setAttribute("stroke", "#333");
+        triangle.setAttribute("stroke-width", "2");
+        svg.appendChild(triangle);
+        
+        const rightAngle = document.createElementNS(svgNS, "path");
+        const angleSize = 10;
+        rightAngle.setAttribute("d", `M ${x1} ${y1} L ${x1 + angleSize} ${y1} L ${x1 + angleSize} ${y1 - angleSize} L ${x1} ${y1}`);
+        rightAngle.setAttribute("fill", "none");
+        rightAngle.setAttribute("stroke", "#333");
+        rightAngle.setAttribute("stroke-width", "1.5");
+        svg.appendChild(rightAngle);
+        
+        // Draw all three sides but show/hide labels based on question.shownSides
+        const hypLine = document.createElementNS(svgNS, "line");
+        hypLine.setAttribute("x1", x2);
+        hypLine.setAttribute("y1", y2);
+        hypLine.setAttribute("x2", x3);
+        hypLine.setAttribute("y2", y3);
+        hypLine.setAttribute("stroke", "#333");
+        hypLine.setAttribute("stroke-width", "2");
+        svg.appendChild(hypLine);
+        
+        // Base (bottom)
+        if (question.shownSides.includes('b')) {
+          addDimensionLine(svg, x1, y1 + 10, x2, y2 + 10, `${question.b}`, 'bottom');
+        } else {
+          addDimensionLine(svg, x1, y1 + 10, x2, y2 + 10, '?', 'bottom');
+        }
+        
+        // Height (left)
+        if (question.shownSides.includes('h')) {
+          addDimensionLine(svg, x1 - 10, y1, x3 - 10, y3, `${question.h}`, 'left');
+        } else {
+          addDimensionLine(svg, x1 - 10, y1, x3 - 10, y3, '?', 'left');
+        }
+        
+        // Hypotenuse
+        if (question.shownSides.includes('hyp')) {
+          const hypText = document.createElementNS(svgNS, "text");
+          hypText.setAttribute("x", (x2 + x3) / 2 + 15);
+          hypText.setAttribute("y", (y2 + y3) / 2);
+          hypText.setAttribute("text-anchor", "middle");
+          hypText.setAttribute("font-size", "18");
+          hypText.setAttribute("fill", "#333");
+          hypText.textContent = `${question.hyp}`;
+          svg.appendChild(hypText);
+        } else {
+          const hypText = document.createElementNS(svgNS, "text");
+          hypText.setAttribute("x", (x2 + x3) / 2 + 15);
+          hypText.setAttribute("y", (y2 + y3) / 2);
+          hypText.setAttribute("text-anchor", "middle");
+          hypText.setAttribute("font-size", "18");
+          hypText.setAttribute("fill", "#333");
+          hypText.textContent = '?';
+          svg.appendChild(hypText);
         }
         break;
       }
@@ -566,4 +713,3 @@ document.addEventListener('DOMContentLoaded', function() {
   
   newQuestion(shapes[0].id);
 });
-
