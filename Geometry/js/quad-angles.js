@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentQuestion = null;
   let score = 0;
   let timer;
-  let timeLeft = 20;
+  let timeLeft = 30;
   
   const timerDisplay = document.createElement('div');
   timerDisplay.id = 'timerDisplay';

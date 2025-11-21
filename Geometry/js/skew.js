@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentQuestion = null;
   let score = 0;
   let timer;
-  let timeLeft = 45;
+  let timeLeft = 30;
   const timerDisplay = document.createElement('div');
   timerDisplay.id = 'timerDisplay';
   shapeContainer.appendChild(timerDisplay);

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentQuestion = null;
   let score = 0;
   let timer;
-  let timeLeft = 20;
+  let timeLeft = 30;
   
   const timerDisplay = document.createElement('div');
   timerDisplay.id = 'timerDisplay';
@@ -96,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function saveHighScore() {
     try {
       const highScores = JSON.parse(localStorage.getItem('triangleQuizHighScores')) || [];
-      highScores.push({ 
-        score: score, 
+      highScores.push({
+        score: score,
         date: new Date().toLocaleDateString(),
         type: shapeSelector.options[shapeSelector.selectedIndex].text
       });
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let start = angle1,
           end = angle2;
-        if ((end - start + 2 * Math.PI) % (2 * Math.PI) > Math.PI) [start, end] = [end, start];
+        if ((end - start + 2 * Math.PI) % (2 * Math.PI) > Math.PI)[start, end] = [end, start];
         
         // Draw the arc
         const radius = hidden ? 15 : 25;
