@@ -236,12 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
     }
     
-    // Special rule for right triangle: hidden angle cannot be 2 (the right angle)
     if (triangleType === 'right' && question.hiddenAngle === 2) {
       question.hiddenAngle = Math.random() < 0.5 ? 1 : 3;
     }
     
-    // Determine answer
     question.answer =
       question.hiddenAngle === 1 ? question.angle1 :
       question.hiddenAngle === 2 ? question.angle2 :
@@ -288,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
           break;
           
         case 'isosceles':
-          // Check if it's acute or obtuse based on apex angle
           const isAcute = question.angle1 < 90;
           if (isAcute) {
             vertices = [
@@ -306,11 +303,10 @@ document.addEventListener('DOMContentLoaded', function() {
           break;
           
         case 'scalene':
-          // Check if it's acute or obtuse based on angles
           const hasObtuse = question.angle1 > 90 || question.angle2 > 90 || question.angle3 > 90;
           if (hasObtuse) {
             vertices = [
-              { x: centerX - size * 0.5, y: centerY - size * 0.2 }, // obtuse apex
+              { x: centerX - size * 0.5, y: centerY - size * 0.2 }, 
               { x: centerX - size * 0.6, y: centerY + size * 0.5 },
               { x: centerX + size * 0.6, y: centerY + size * 0.3 }
             ];
@@ -380,7 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
         addSlashMark(vertices[0].x, vertices[0].y, vertices[2].x, vertices[2].y, 1);
       }
       
-      // Angle arcs and labels
       function addAngleArc(v, v1, v2, hidden, angleValue, vertexIndex) {
         const dx1 = v1.x - v.x,
           dy1 = v1.y - v.y;
