@@ -31,10 +31,12 @@ function initializeGame() {
     let finalAnswersValidated = false;
     let isGenerating = false;
     let numberCount = 2;
+    let gameOver = false;
 
     // Event Listener for Custom Dropdown
     if (dropdown) {
         dropdown.addEventListener('dropdownChange', (e) => {
+            if (gameOver) return;
             numberCount = parseInt(e.detail.value);
             // Reset game completely
             score = 0;
@@ -52,6 +54,11 @@ function initializeGame() {
         progressEl.classList.remove('time-warning', 'time-critical');
         
         timerInterval = setInterval(() => {
+            if (gameOver) {
+                clearInterval(timerInterval);
+                return;
+            }
+            
             timeLeft--;
             timerEl.textContent = `${timeLeft}s`;
             progressEl.style.width = `${(timeLeft / 60) * 100}%`;
@@ -64,17 +71,9 @@ function initializeGame() {
             
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                if (!gameActive || isGenerating) return;
+                if (!gameActive || isGenerating || gameOver) return;
                 
-                gameActive = false;
-                messageEl.style.color = "var(--error-color)";
-                messageEl.textContent = "Time's up! Starting new problem...";
-                disableAllInputs();
-                setTimeout(() => {
-                    if (!isGenerating) {
-                        generateNewProblem();
-                    }
-                }, 2000);
+                endGame("Time's up! Game Over."); // ONLY time triggers game over
             }
         }, 1000);
     }
@@ -83,6 +82,13 @@ function initializeGame() {
         const inputs = document.querySelectorAll('input');
         inputs.forEach(input => {
             input.disabled = true;
+        });
+    }
+
+    function enableAllInputs() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.disabled = false;
         });
     }
 
@@ -108,6 +114,7 @@ function initializeGame() {
         factorInput.autofocus = true;
         
         factorInput.addEventListener('input', () => {
+            if (gameOver) return;
             if (factorInput.value.length > 0) {
                 validateFactor(factorInput, row, expectedFactor);
             }
@@ -124,6 +131,7 @@ function initializeGame() {
             divInput.disabled = true;
             
             divInput.addEventListener('input', () => {
+                if (gameOver) return;
                 if (divInput.value.length > 0) {
                     validateDivision(divInput, row, index);
                 }
@@ -157,6 +165,7 @@ function initializeGame() {
         } else if (input.value.length > 0) {
             input.classList.add('error');
             messageEl.textContent = `Incorrect. Find a prime number that divides ALL values.`;
+            // REMOVED: endGame() call - just show error but let continue
         }
     }
 
@@ -185,6 +194,7 @@ function initializeGame() {
         } else if (input.value.length > 0) {
             input.classList.add('error');
             messageEl.textContent = "Check your division again.";
+            // REMOVED: endGame() call - just show error but let continue
         }
     }
 
@@ -210,21 +220,24 @@ function initializeGame() {
             lowestTermsContainer.appendChild(inp);
             
             inp.addEventListener('input', () => {
+                if (gameOver) return;
                 checkIfAllFinalInputsFilled();
             });
         });
         
         hcfInput.addEventListener('input', () => {
+            if (gameOver) return;
             checkIfAllFinalInputsFilled();
         });
         
         lcmInput.addEventListener('input', () => {
+            if (gameOver) return;
             checkIfAllFinalInputsFilled();
         });
     }
 
     function checkIfAllFinalInputsFilled() {
-        if (!gameActive || finalAnswersValidated) return;
+        if (!gameActive || finalAnswersValidated || gameOver) return;
         
         const termInputs = lowestTermsContainer.querySelectorAll('input');
         const allFilled = 
@@ -238,7 +251,7 @@ function initializeGame() {
     }
 
     function validateFinalAnswers() {
-        if (!gameActive || finalAnswersValidated) return;
+        if (!gameActive || finalAnswersValidated || gameOver) return;
         
         let allCorrect = true;
         
@@ -291,20 +304,43 @@ function initializeGame() {
             clearInterval(timerInterval);
             
             setTimeout(() => {
-                if (!isGenerating) {
+                if (!isGenerating && !gameOver) {
                     messageEl.classList.remove('success-animation');
                     generateNewProblem();
                 }
             }, 2000);
         } else {
             messageEl.style.color = "var(--error-color)";
-            messageEl.textContent = "Some answers are wrong. Check Red boxes.";
+            messageEl.textContent = "Some answers are wrong. Check Red boxes and try again.";
+            // REMOVED: endGame() call - just show error but let continue correcting
         }
+    }
+
+    // MODIFIED: Only used for time running out
+    function endGame(message) {
+        gameOver = true;
+        gameActive = false;
+        clearInterval(timerInterval);
+        
+        messageEl.style.color = "var(--error-color)";
+        messageEl.textContent = message;
+        
+        disableAllInputs();
+        
+        // Add restart button or instructions
+        setTimeout(() => {
+            if (!isGenerating) {
+                messageEl.textContent += " Refresh the page to play again.";
+            }
+        }, 2000);
     }
 
     function generateNewProblem() {
         if (isGenerating) return;
         isGenerating = true;
+
+        gameOver = false;
+        gameActive = true;
 
         let attempts = 0;
         let success = false;
@@ -390,6 +426,8 @@ function initializeGame() {
         if (typeof headerRow !== 'undefined') {
             headerRow.innerHTML = currentNumbers.map(n => `<div>${n}</div>`).join('');
         }
+        
+        enableAllInputs();
         
         if (typeof checkStateAndCreateRow === 'function') checkStateAndCreateRow();
         if (typeof startTimer === 'function') startTimer();
