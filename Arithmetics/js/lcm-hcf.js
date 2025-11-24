@@ -155,7 +155,7 @@ function initializeGame() {
             currentFactor = val;
             historyFactors.push(val);
             
-            messageEl.textContent = `Correct! Now divide the numbers by ${val}`;
+            messageEl.textContent = `Correct!`;
             
             const firstInput = row.querySelectorAll('.factor-input')[0];
             firstInput.disabled = false;
@@ -297,7 +297,7 @@ function initializeGame() {
         if (allCorrect) {
             finalAnswersValidated = true;
             messageEl.style.color = "var(--success-color)";
-            messageEl.textContent = "CONGRATULATIONS! All answers are correct.";
+            messageEl.textContent = "CONGRATULATIONS!.";
             messageEl.classList.add('success-animation');
             
             updateScore(numberCount * 2);
@@ -311,8 +311,7 @@ function initializeGame() {
             }, 2000);
         } else {
             messageEl.style.color = "var(--error-color)";
-            messageEl.textContent = "Some answers are wrong. Check Red boxes and try again.";
-            // REMOVED: endGame() call - just show error but let continue correcting
+            messageEl.textContent = "Some answers are wrong!";
         }
     }
 
@@ -330,7 +329,7 @@ function initializeGame() {
         // Add restart button or instructions
         setTimeout(() => {
             if (!isGenerating) {
-                messageEl.textContent += " Refresh the page to play again.";
+                messageEl.textContent += " Refresh";
             }
         }, 2000);
     }
@@ -418,7 +417,7 @@ function initializeGame() {
 
         if (typeof messageEl !== 'undefined') {
             messageEl.style.color = "var(--text-color)";
-            messageEl.textContent = `Find a common prime factor for ${numberCount} numbers`;
+            messageEl.textContent = `Factorize`;
         }
 
         console.log(`Generated: ${generatedNums.join(', ')}`);
