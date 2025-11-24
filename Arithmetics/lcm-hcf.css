@@ -80,10 +80,8 @@ h3 {
 }
 
 .score {
-    background: var(--accent-color);
-    color: white;
-    padding: 5px 16px;
-    border-radius: var(--border-radius-full);
+    color: var(--accent-color);
+    padding: 8px 16px;
     font-size: 1.1rem;
 }
 
