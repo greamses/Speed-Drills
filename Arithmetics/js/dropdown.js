@@ -88,7 +88,6 @@ class CustomDropdown {
   }
 }
 
-// Initialize dropdown when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   const dropdownContainer = document.getElementById('number-count-dropdown');
   if (dropdownContainer) {
