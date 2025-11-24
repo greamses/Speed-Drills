@@ -287,8 +287,6 @@ function generateNewProblem() {
   let attempts = 0;
   let success = false;
 
-  // We need an HCF with at least 3 prime factors (e.g., 2*2*2=8, 2*2*3=12, 2*3*5=30)
-  // We filter for numbers < 60 to leave room for multipliers within the 200 limit.
   const validHCFs = [];
   for (let i = 8; i <= 60; i++) {
     if (getPrimeFactors(i).length >= 3) {
@@ -299,17 +297,11 @@ function generateNewProblem() {
   while (!success && attempts < 100) {
     attempts++;
 
-    // 1. Pick a "rich" HCF from our pre-calculated list
     hcf = validHCFs[Math.floor(Math.random() * validHCFs.length)];
 
-    // 2. Determine max possible multiplier to stay under 200
     const maxMultiplier = Math.floor(200 / hcf);
 
-    if (maxMultiplier < 2) continue; // Should not happen given hcf <= 60, but safety first
-
-    // 3. Pick two distinct multipliers (m1, m2)
-    // They MUST be coprime (GCD = 1) otherwise the HCF increases.
-    // e.g. if HCF=10, m1=2, m2=4 -> Num1=20, Num2=40 -> Actual HCF becomes 20.
+    if (maxMultiplier < 2) continue; 
     let m1 = Math.floor(Math.random() * maxMultiplier) + 1;
     let m2 = Math.floor(Math.random() * maxMultiplier) + 1;
 
@@ -319,29 +311,24 @@ function generateNewProblem() {
     num1 = hcf * m1;
     num2 = hcf * m2;
 
-    // 4. Final Validation
-    // Ensure numbers aren't identical (already checked by m1!==m2)
-    // Ensure they aren't too simple (e.g., avoid 1 * HCF if you prefer harder problems)
     if (num1 <= 200 && num2 <= 200) {
       success = true;
     }
   }
 
-  // Fallback if RNG fails (unlikely with this logic)
+
   if (!success) {
-    num1 = 60;  // 2*2*3*5
-    num2 = 120; // 2*2*2*3*5
+    num1 = 60;  
+    num2 = 120; 
   }
 
-  // --- UI UPDATE LOGIC (Kept largely the same) ---
-  
   currentNumbers = [num1, num2];
   historyFactors = [];
   currentFactor = null;
   gameActive = true;
   finalAnswersValidated = false;
 
-  // Assuming these elements exist in your global scope
+
   if (typeof primeContainer !== 'undefined') primeContainer.innerHTML = '';
   if (typeof finalStage !== 'undefined') finalStage.classList.add('hidden');
   
@@ -365,7 +352,7 @@ function generateNewProblem() {
     headerRow.innerHTML = currentNumbers.map(n => `<div>${n}</div>`).join('');
   }
   
-  // Assuming these functions exist in your global scope
+
   if (typeof checkStateAndCreateRow === 'function') checkStateAndCreateRow();
   if (typeof startTimer === 'function') startTimer();
 
@@ -398,10 +385,8 @@ function getPrimeFactors(num) {
 }
 
 function getCommonPrimeFactor(arr) {
-  // Find the smallest number in the array to set our search limit
   const limit = Math.min(...arr);
   
-  // Start checking from 2
   if (arr.every(num => num % 2 === 0)) return 2;
 
   for (let i = 3; i <= limit; i += 2) {
