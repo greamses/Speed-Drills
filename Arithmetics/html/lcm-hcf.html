@@ -12,9 +12,27 @@
 <body>
   
   <div class="wrapper">
-    <h3>Factorize</h3>
+    <div class="top-bar">
+      <h3>Factorize</h3>
+      <div class="controls">
+        <!-- Custom Dropdown -->
+        <div class="custom-dropdown" id="number-count-dropdown">
+          <div class="dropdown-selected">
+            <span>2 Numbers</span>
+            <svg class="dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+              <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="dropdown-options">
+            <div class="dropdown-option" data-value="2">2 Numbers</div>
+            <div class="dropdown-option" data-value="3">3 Numbers</div>
+            <div class="dropdown-option" data-value="4">4 Numbers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="header">
-
       <div class="stats">
         <div class="timer" id="timer">60s</div>
         <div class="score" id="score">Score: 0</div>
@@ -47,6 +65,7 @@
     <div id="message">Common Prime Factor</div>
   </div>
   
+  <script src="../js/dropdown.js"></script>
   <script src="../js/lcm-hcf.js"></script>
 </body>
 
