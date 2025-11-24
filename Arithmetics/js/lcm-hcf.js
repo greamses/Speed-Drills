@@ -129,7 +129,7 @@ function validateFactor(input, row, expected) {
     firstInput.disabled = false;
     firstInput.focus();
     
-    updateScore(10);
+    updateScore(1);
   } else if (input.value.length > 0) {
     input.classList.add('error');
     messageEl.textContent = `Incorrect. Find a prime number that divides ALL values.`;
@@ -156,7 +156,7 @@ function validateDivision(input, row, index) {
       finishRow(row);
     }
     
-    updateScore(5);
+    updateScore(1);
   } else if (input.value.length > 0) {
     input.classList.add('error');
     messageEl.textContent = "Check your division again.";
@@ -259,7 +259,7 @@ function validateFinalAnswers() {
     messageEl.textContent = "CONGRATULATIONS! All answers are correct.";
     messageEl.classList.add('success-animation');
     
-    updateScore(50);
+    updateScore(2);
     clearInterval(timerInterval);
     
     setTimeout(() => {
