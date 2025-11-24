@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HCF & LCM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../lcm-hcf.css">
+</head>
+
+<body>
+  
+  <div class="wrapper">
+    <h3>Factorize</h3>
+    <div class="header">
+
+      <div class="stats">
+        <div class="timer" id="timer">60s</div>
+        <div class="score" id="score">Score: 0</div>
+      </div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+    
+    <div class="header-row" id="headerRow"></div>
+    
+    <div class="prime-container" id="primeContainer"></div>
+    
+    <div id="final-stage" class="final-stage hidden">
+      <div class="final-row">
+        <label>HCF:</label>
+        <input type="number" id="hcf-input" placeholder="?" />
+      </div>
+      <div class="final-row">
+        <label>LT:</label>
+        <div class="lowest-terms-container" id="lowest-terms-inputs"></div>
+      </div>
+      <div class="final-row">
+        <label>LCM:</label>
+        <input type="number" id="lcm-input" placeholder="?" />
+      </div>
+    </div>
+    
+    <div id="message">Find a common prime factor</div>
+  </div>
+  
+  <script src="../js/lcm-hcf.js"></script>
+</body>
+
+</html>

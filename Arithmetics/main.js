@@ -11,7 +11,8 @@ const resources = [
   { name: "Metric Measurement", url: "./html/metric.html" },
   { name: "Percents Sprint 1", url: "./html/percent-sprint1.html" },
   { name: "Percents Sprint 2", url:'./html/percent-sprint2.html'},
-  { name: "Roman Numerals", url:'./html/roman.html'}
+  { name: "Roman Numerals", url:'./html/roman.html'},
+  { name: "LCM-HCF", url:'./html/lcm-hcf.html'}
 ];
 
 listConverter(resources)
