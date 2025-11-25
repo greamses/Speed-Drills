@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prime Factorization & Roots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../media.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  
+  <div class="wrapper">
+    <div class="top-bar">
+      <h3>Factors</h3>
+      <div class="controls">
+        <div class="custom-dropdown" id="mode-dropdown">
+          <div class="dropdown-selected">
+            <span id="selected-mode-text">Square Root</span>
+            <svg class="dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+              <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="dropdown-options">
+            <div class="dropdown-option" data-value="sq_root">Square Root</div>
+            <div class="dropdown-option" data-value="cb_root">Cube Root</div>
+            <div class="dropdown-option" data-value="mk_sq"> Perfect ²</div>
+            <div class="dropdown-option" data-value="mk_cb"> Perfect ³</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header">
+      <div class="stats">
+        <div class="timer" id="timer">60s</div>
+        <div class="score" id="score">Score: 0</div>
+      </div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+    
+    <div class="header-row" id="headerRow"></div>
+    
+    <div class="prime-container" id="primeContainer"></div>
+    
+    <div id="final-stage" class="final-stage hidden">
+      <div class="info-text" id="final-instruction">
+        Group the prime.
+      </div>
+      <div class="final-row centered">
+        <label id="final-label">√N = </label>
+        <input type="number" id="final-input" placeholder="?" />
+      </div>
+    </div>
+    
+    <div id="message">The smallest prime</div>
+  </div>
+  
+  
+  
+  <div id="keypad">
+    <button class="key-btn" data-key="x">𝑥</button>
+    <button class="key-btn" data-key="y">𝑦</button>
+    <button class="key-btn" data-key="^2">²</button>
+    <button class="key-btn" data-key="^3">³</button>
+    <button class="key-btn action-btn" id="key-backspace">⌫</button>
+  </div>
+  
+  
+  <script src="../js/factorize.js"></script>
+</body>
+
+</html>

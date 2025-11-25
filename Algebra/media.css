@@ -1,0 +1,464 @@
+
+:root {
+    /* Colors */
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --accent-color: #4895ef;
+    --success-color: #C8FFE6;
+    --error-color: #FFB4D6;
+    --warning-color: #f8961e;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --text-color: #2b2d42;
+    --text-light: #8d99ae;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    
+    /* Border Radius */
+    --border-radius-full: 9999px;
+    --border-radius-xl: 20px;
+    --border-radius-lg: 16px;
+    --border-radius-md: 12px;
+    --border-radius-sm: 8px;
+    
+    /* Transitions */
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* ==================== RESET & BASE ==================== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--light-color);
+    padding: 20px;
+    color: var(--text-color);
+}
+
+/* ==================== MAIN WRAPPER ==================== */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 650px;
+    position: relative;
+}
+
+/* ==================== TOP BAR & HEADER ==================== */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    font-weight: 600;
+    width: 100%;
+}
+
+.timer {
+    color: var(--primary-color);
+    padding: 8px 16px;
+    font-size: 1.1rem;
+}
+
+.score {
+    color: var(--accent-color);
+    padding: 8px 16px;
+    font-size: 1.1rem;
+}
+
+/* ==================== DROPDOWN ==================== */
+.custom-dropdown {
+    position: relative;
+    width: 140px;
+    cursor: pointer;
+}
+
+.dropdown-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-md);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    background-color: white;
+    transition: var(--transition);
+}
+
+.dropdown-selected:hover {
+    background-color: rgba(67, 97, 238, 0.05);
+}
+
+.dropdown-arrow {
+    transition: var(--transition);
+}
+
+.custom-dropdown.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid #e2e8f0;
+    margin-top: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition);
+    z-index: 100;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.custom-dropdown.active .dropdown-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    max-height: 200px;
+}
+
+.dropdown-option {
+    padding: 10px 12px;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: var(--transition);
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.dropdown-option:hover {
+    background-color: rgba(67, 97, 238, 0.08);
+    color: var(--primary-color);
+}
+
+/* ==================== PROGRESS BAR ==================== */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-full);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 100%;
+    transition: width 1s linear;
+}
+
+.time-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.time-critical {
+    background-color: var(--error-color) !important;
+    animation: pulse 1s infinite;
+}
+
+/* ==================== HEADER ROW (PROBLEM DISPLAY) ==================== */
+#headerRow {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    min-height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* ==================== PRIME FACTORIZATION GRID ==================== */
+.prime-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.prime-row {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.prime-row input {
+    width: 80px;
+    height: 50px;
+    font-size: 1.2rem;
+    text-align: center;
+    outline: none;
+    border: 2px solid var(--primary-color);
+    transition: var(--transition);
+    font-weight: 600;
+    background: white;
+}
+
+.prime-row input:first-child {
+    border-right: none;
+    background-color: var(--light-color);
+}
+
+.prime-row input:last-child {
+    border-left: 2px solid var(--primary-color);
+}
+
+.prime-row input:disabled {
+    cursor: default;
+}
+
+input.correct {
+    background-color: var(--success-color) !important;
+    color: var(--text-color);
+}
+
+input.error {
+    background-color: var(--error-color) !important;
+    animation: shake 0.3s;
+}
+
+/* Math display spans in rows */
+.prime-row .math-display {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 50px;
+    font-size: 1.2rem;
+    background: var(--success-color);
+    font-weight: 600;
+    border: 2px solid var(--primary-color);
+    border-left: none;
+}
+
+/* ==================== FINAL STAGE ==================== */
+.final-stage {
+    margin-top: 20px;
+    border-top: 2px dashed #e2e8f0;
+    padding-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.final-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.final-row label {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.final-row input {
+    width: 100px;
+    height: 45px;
+    text-align: center;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius-sm);
+    outline: none;
+    transition: var(--transition);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.final-row .math-display {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    height: 45px;
+    padding: 0 15px;
+    font-size: 1.2rem;
+    background: var(--success-color);
+    font-weight: 600;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius-sm);
+}
+
+/* ==================== MESSAGES ==================== */
+#message,
+.info-text {
+    margin: 20px 0;
+    text-align: center;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* ==================== KEYPAD ==================== */
+#keypad {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    padding: 12px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.key-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background: var(--light-color);
+    color: var(--text-color);
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 0 #d1d5db;
+}
+
+.key-btn:hover {
+    background: #e5e7eb;
+}
+
+.key-btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.key-btn.action-btn {
+    background: #ffeded;
+    color: #d32f2f;
+    box-shadow: 0 2px 0 #ffcccc;
+}
+
+.key-btn.action-btn:hover {
+    background: #ffd5d5;
+}
+
+/* ==================== UTILITIES ==================== */
+.hidden {
+    display: none !important;
+}
+
+.success-animation {
+    animation: successPulse 0.5s ease-in-out;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25%, 75% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 600px) {
+    .wrapper {
+        padding: 20px;
+    }
+    
+    .prime-row input,
+    .prime-row .math-display {
+        width: 60px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    #headerRow {
+        font-size: 1.5rem;
+    }
+    
+    #keypad {
+        bottom: 10px;
+        padding: 8px;
+        gap: 6px;
+    }
+    
+    .key-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
