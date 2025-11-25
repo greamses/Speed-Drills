@@ -1,4 +1,3 @@
-// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Wait for dropdown to be initialized
     setTimeout(() => {
@@ -585,6 +584,3 @@ function isPrime(num) {
         }, 200);
     }
 }
-
-
-
