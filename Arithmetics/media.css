@@ -42,8 +42,8 @@
     --primary-color: #4361ee;
     --secondary-color: #3f37c9;
     --accent-color: #4895ef;
-    --success-color: #4cc9f0;
-    --error-color: #f72585;
+    --success-color: #C8FFE6;
+    --error-color: #FFB4D6;
     --warning-color: #f8961e;
     --light-color: #f8f9fa;
     --dark-color: #212529;
@@ -270,7 +270,7 @@ input.prime-factor {
 
 input.correct {
     background-color: var(--success-color);
-    color: var(--primary-color);
+    color: var(--text-light);
 }
 
 input.error {
@@ -279,7 +279,7 @@ input.error {
 }
 
 input:disabled {
-    color: var(--text-light);
+    color: var(--primary-dark);
     cursor: default;
 }
 
@@ -345,27 +345,62 @@ input:disabled {
     transition: width 1s linear;
 }
 
-.time-warning { background-color: var(--warning-color) !important; }
-.time-critical { background-color: var(--error-color) !important; animation: pulse 1s infinite; }
-.success-animation { animation: successPulse 0.5s ease-in-out; }
+.time-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.time-critical {
+    background-color: var(--error-color) !important;
+    animation: pulse 1s infinite;
+}
+
+.success-animation {
+    animation: successPulse 0.5s ease-in-out;
+}
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25%, 75% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    
+    25%,
+    75% {
+        transform: translateX(-5px);
+    }
+    
+    50% {
+        transform: translateX(5px);
+    }
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+    
+    50% {
+        opacity: 0.7;
+    }
 }
 
 @keyframes successPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    
+    50% {
+        transform: scale(1.05);
+    }
 }
 
-#message, .info-text{
+#message,
+.info-text {
     margin: 20px 0;
     text-align: center;
 }

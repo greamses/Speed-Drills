@@ -82,7 +82,7 @@ function initializeGame() {
             // Success Sequence
             finalInput.classList.add('correct');
             finalInput.disabled = true; // Prevent double entry
-            messageEl.style.color = "var(--success-color)";
+            messageEl.style.color = "var(--success)";
             messageEl.textContent = "Correct! Loading next...";
             updateScore(10);
             
@@ -158,7 +158,7 @@ function initializeGame() {
             } else {
                 // Incorrect
                 primeInput.classList.add('error');
-                messageEl.style.color = "var(--error-color)";
+                messageEl.style.color = "var(--accent-color)";
                 
                 // Specific feedback
                 if (currentNumber % val !== 0) {
@@ -324,7 +324,7 @@ function initializeGame() {
     
     function endGame(msg) {
         gameActive = false;
-        messageEl.style.color = "var(--error-color)";
+        messageEl.style.color = "var(--accent-color)";
         messageEl.textContent = msg + " Refresh or change mode to restart.";
         document.querySelectorAll('input').forEach(i => i.disabled = true);
     }

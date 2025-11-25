@@ -309,7 +309,7 @@ function initializeGame() {
                 }
             }, 2000);
         } else {
-            messageEl.style.color = "var(--error-color)";
+            messageEl.style.color = "var(--accent-color)";
             messageEl.textContent = "Some answers are wrong!";
         }
     }
@@ -319,7 +319,7 @@ function initializeGame() {
         gameActive = false;
         clearInterval(timerInterval);
         
-        messageEl.style.color = "var(--error-color)";
+        messageEl.style.color = "var(--accent-color)";
         messageEl.textContent = message;
         
         disableAllInputs();
