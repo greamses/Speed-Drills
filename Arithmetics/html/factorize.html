@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HCF & LCM</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <title>Prime Factorization & Roots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../media.css">
 </head>
 
@@ -13,20 +13,20 @@
   
   <div class="wrapper">
     <div class="top-bar">
-      <h3>Factorize</h3>
+      <h3>Factors</h3>
       <div class="controls">
-        <!-- Custom Dropdown -->
-        <div class="custom-dropdown" id="number-count-dropdown">
+        <div class="custom-dropdown" id="mode-dropdown">
           <div class="dropdown-selected">
-            <span>2 Numbers</span>
+            <span id="selected-mode-text">Square Root</span>
             <svg class="dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
               <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
           </div>
           <div class="dropdown-options">
-            <div class="dropdown-option" data-value="2">2 Numbers</div>
-            <div class="dropdown-option" data-value="3">3 Numbers</div>
-            <div class="dropdown-option" data-value="4">4 Numbers</div>
+            <div class="dropdown-option" data-value="sq_root">Square Root</div>
+            <div class="dropdown-option" data-value="cb_root">Cube Root</div>
+            <div class="dropdown-option" data-value="mk_sq"> Perfect ²</div>
+            <div class="dropdown-option" data-value="mk_cb"> Perfect ³</div>
           </div>
         </div>
       </div>
@@ -48,25 +48,19 @@
     <div class="prime-container" id="primeContainer"></div>
     
     <div id="final-stage" class="final-stage hidden">
-      <div class="final-row">
-        <label>HCF:</label>
-        <input type="number" id="hcf-input" placeholder="?" />
+      <div class="info-text" id="final-instruction">
+        Group the prime.
       </div>
-      <div class="final-row">
-        <label>LT:</label>
-        <div class="lowest-terms-container" id="lowest-terms-inputs"></div>
-      </div>
-      <div class="final-row">
-        <label>LCM:</label>
-        <input type="number" id="lcm-input" placeholder="?" />
+      <div class="final-row centered">
+        <label id="final-label">√N = </label>
+        <input type="number" id="final-input" placeholder="?" />
       </div>
     </div>
     
-    <div id="message">Common Prime Factor</div>
+    <div id="message">The smallest prime</div>
   </div>
   
-  <script src="../js/dropdown.js"></script>
-  <script src="../js/lcm-hcf.js"></script>
+  <script src="../js/factorize.js"></script>
 </body>
 
 </html>
